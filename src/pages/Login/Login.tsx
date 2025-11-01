@@ -35,12 +35,28 @@ export const Login: React.FC = () => {
       toast.success(`Welcome back, ${response.data.user.name}!`);
       navigate('/dashboard');
     } catch (err: any) {
-      const errorMessage =
-        err.response?.data?.message ||
-        err.message ||
-        'Failed to login. Please check your credentials.';
+      let errorMessage = 'Failed to login. Please check your credentials.';
+      
+      // Check for API configuration issues
+      if (err.message?.includes('API Base URL is not configured')) {
+        errorMessage = 'API server is not configured. Please contact the administrator.';
+      } else if (err.response?.status === 404) {
+        errorMessage = err.response?.data?.message || 'The login endpoint was not found. Please check your API configuration.';
+      } else if (err.response?.status === 401) {
+        errorMessage = 'Invalid email or password. Please try again.';
+      } else if (err.response?.data?.message) {
+        errorMessage = err.response.data.message;
+      } else if (err.message) {
+        errorMessage = err.message;
+      }
+      
       setError(errorMessage);
       toast.error(errorMessage);
+      
+      // Log detailed error in development
+      if (import.meta.env.DEV) {
+        console.error('Login error details:', err);
+      }
     } finally {
       setLoading(false);
     }
