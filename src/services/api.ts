@@ -2,12 +2,12 @@ import axios from 'axios';
 import type { AxiosInstance, InternalAxiosRequestConfig, AxiosResponse } from 'axios';
 
 // API Base URL - Replace with actual API URL when available
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '';
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 // Validate API URL is set
 if (!API_BASE_URL) {
   console.error('❌ VITE_API_BASE_URL is not set! Please set it in .env.local or environment variables.');
-  console.error('Example: VITE_API_BASE_URL=https://your-api-url.com');
+  console.error('Example: VITE_API_BASE_URL=https://alasrbackend.vercel.app/api/v1');
 }
 
 // Log API URL in development (don't log in production for security)
