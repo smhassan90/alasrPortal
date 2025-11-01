@@ -6,7 +6,7 @@ const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 // Validate API URL is set
 if (!API_BASE_URL) {
-  console.error('❌ VITE_API_BASE_URL is not set! Please set it in .env.local or environment variables.');
+  console.error('❌ VITE_API_BASE_URL is not set!! Please set it in .env.local or environment variables.');
   console.error('Example: VITE_API_BASE_URL=https://alasrbackend.vercel.app/api/v1');
 }
 
