@@ -10,7 +10,7 @@ import masjidService from '../../services/masjidService';
 import userService from '../../services/userService';
 
 export const Analytics: React.FC = () => {
-  const [loading, setLoading] = useState(true);
+  const [, setLoading] = useState(true);
   const [totalMasajids, setTotalMasajids] = useState(0);
   const [totalUsers, setTotalUsers] = useState(0);
   const [totalQuestions, setTotalQuestions] = useState(0);

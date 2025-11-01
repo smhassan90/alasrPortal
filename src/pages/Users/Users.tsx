@@ -12,7 +12,7 @@ import { toast } from 'react-toastify';
 import userService from '../../services/userService';
 import type { User } from '../../services/authService';
 import { useAppDispatch, useAppSelector } from '../../redux/hooks';
-import { setUsers, addUser, updateUser as updateUserState, removeUser } from '../../redux/usersSlice';
+import { setUsers, updateUser as updateUserState, removeUser } from '../../redux/usersSlice';
 
 export const Users: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -121,6 +121,7 @@ export const Users: React.FC = () => {
       email: user.email,
       password: '',
       phone: user.phone || '',
+      is_super_admin: user.is_super_admin || false,
     });
     setShowUserModal(true);
   };
@@ -463,7 +464,9 @@ export const Users: React.FC = () => {
         <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
           {/* Basic Information */}
           <div>
-            <Text variant="semiBold" size="lg" style={{ marginBottom: '12px' }}>Basic Information</Text>
+            <div style={{ marginBottom: '12px' }}>
+              <Text variant="semiBold" size="lg">Basic Information</Text>
+            </div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
               <Input
                 label="Name"
@@ -522,7 +525,9 @@ export const Users: React.FC = () => {
           {/* Masjid Assignment */}
           {!editingUser && (
             <div style={{ borderTop: '1px solid #E0E0E0', paddingTop: '20px' }}>
-              <Text variant="semiBold" size="lg" style={{ marginBottom: '12px' }}>Assign to Masjid (Optional)</Text>
+              <div style={{ marginBottom: '12px' }}>
+                <Text variant="semiBold" size="lg">Assign to Masjid (Optional)</Text>
+              </div>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
                 <Select
                   label="Select Masjid"
@@ -547,7 +552,9 @@ export const Users: React.FC = () => {
                     />
 
                     <div>
-                      <Text variant="medium" size="sm" style={{ marginBottom: '8px' }}>Permissions</Text>
+                      <div style={{ marginBottom: '8px' }}>
+                        <Text variant="medium" size="sm">Permissions</Text>
+                      </div>
                       <div style={{ display: 'flex', gap: '8px', marginBottom: '12px' }}>
                         <Button size="small" variant="outline" onClick={setAllPermissions}>
                           Select All
