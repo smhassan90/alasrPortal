@@ -1,0 +1,137 @@
+.header {
+  height: 70px;
+  background: #FFFFFF;
+  border-bottom: 1px solid #E0E0E0;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 0 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: sticky;
+  top: 0;
+  z-index: 99;
+}
+
+.left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.menuButton {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  border: none;
+  background: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  color: #222222;
+  transition: background 0.2s;
+}
+
+.menuButton:hover {
+  background: #F5F5F5;
+}
+
+.title {
+  font-size: 20px;
+  font-weight: 600;
+  color: #222222;
+  font-family: 'Poppins', sans-serif;
+  margin: 0;
+}
+
+.right {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.notificationButton {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  border: none;
+  background: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  color: #222222;
+  transition: background 0.2s;
+  position: relative;
+}
+
+.notificationButton:hover {
+  background: #F5F5F5;
+}
+
+.notificationBadge {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  width: 8px;
+  height: 8px;
+  background: #DC3545;
+  border-radius: 50%;
+  border: 2px solid #FFFFFF;
+}
+
+.userInfo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 8px;
+  transition: background 0.2s;
+}
+
+.userInfo:hover {
+  background: #F5F5F5;
+}
+
+.avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 2px solid #E0E0E0;
+  object-fit: cover;
+}
+
+.avatarPlaceholder {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #007F5F;
+  color: #FFFFFF;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 16px;
+  font-family: 'Poppins', sans-serif;
+}
+
+.userName {
+  font-size: 14px;
+  font-weight: 500;
+  color: #222222;
+  font-family: 'Poppins', sans-serif;
+}
+
+@media (max-width: 768px) {
+  .userName {
+    display: none;
+  }
+
+  .title {
+    font-size: 18px;
+  }
+}
+

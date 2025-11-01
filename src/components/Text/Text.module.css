@@ -1,0 +1,73 @@
+.text {
+  font-family: 'Poppins', sans-serif;
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* Variants (weights) */
+.regular {
+  font-weight: 400;
+}
+
+.medium {
+  font-weight: 500;
+}
+
+.semiBold {
+  font-weight: 600;
+}
+
+.bold {
+  font-weight: 700;
+}
+
+/* Sizes */
+.xs {
+  font-size: 12px;
+}
+
+.sm {
+  font-size: 14px;
+}
+
+.md {
+  font-size: 16px;
+}
+
+.lg {
+  font-size: 18px;
+}
+
+.xl {
+  font-size: 20px;
+}
+
+.xxl {
+  font-size: 24px;
+}
+
+.xxxl {
+  font-size: 28px;
+}
+
+.huge {
+  font-size: 32px;
+}
+
+/* Alignment */
+.left {
+  text-align: left;
+}
+
+.center {
+  text-align: center;
+}
+
+.right {
+  text-align: right;
+}
+
+.justify {
+  text-align: justify;
+}
+
