@@ -98,6 +98,16 @@ export const Users: React.FC = () => {
     setShowUserModal(true);
   };
 
+  const handleCloseModal = () => {
+    setShowUserModal(false);
+    // Reset form when closing
+    setEditingUser(null);
+    setUserForm({ name: '', email: '', password: '', phone: '', is_super_admin: false });
+    setSelectedMasjid('');
+    setSelectedRole('Admin');
+    setSelectedPermissions([]);
+  };
+
   const togglePermission = (permission: string) => {
     setSelectedPermissions((prev) =>
       prev.includes(permission)
@@ -114,7 +124,7 @@ export const Users: React.FC = () => {
     setSelectedPermissions([]);
   };
 
-  const handleEditUser = (user: User) => {
+  const handleEditUser = async (user: User) => {
     setEditingUser(user);
     setUserForm({
       name: user.name,
@@ -123,6 +133,45 @@ export const Users: React.FC = () => {
       phone: user.phone || '',
       is_super_admin: user.is_super_admin || false,
     });
+    
+    // Load masjid assignment if user has one
+    if (user.masjid_assignment) {
+      setSelectedMasjid(user.masjid_assignment.masjid_id);
+      setSelectedRole((user.masjid_assignment.role.charAt(0).toUpperCase() + user.masjid_assignment.role.slice(1)) as 'Admin' | 'Imam');
+      
+      // Convert permissions object to array
+      const permissionsArray: string[] = [];
+      if (user.masjid_assignment.permissions) {
+        Object.keys(user.masjid_assignment.permissions).forEach(key => {
+          if (user.masjid_assignment?.permissions?.[key as keyof typeof user.masjid_assignment.permissions]) {
+            permissionsArray.push(key);
+          }
+        });
+      }
+      setSelectedPermissions(permissionsArray);
+    } else {
+      // Try to find masjid assignment by checking all masajids
+      try {
+        const masjidService = (await import('../../services/masjidService')).default;
+        for (const masjid of allMasajids) {
+          const members = await masjidService.getMasjidMembers(masjid.id);
+          const member = members.find(m => m.user_id === user.id);
+          if (member) {
+            setSelectedMasjid(masjid.id);
+            setSelectedRole(member.role as 'Admin' | 'Imam');
+            setSelectedPermissions(member.permissions || []);
+            break;
+          }
+        }
+      } catch (error) {
+        console.error('Failed to load masjid assignment:', error);
+        // If we can't find it, reset to empty
+        setSelectedMasjid('');
+        setSelectedRole('Admin');
+        setSelectedPermissions([]);
+      }
+    }
+    
     setShowUserModal(true);
   };
 
@@ -135,11 +184,40 @@ export const Users: React.FC = () => {
 
       setLoading(true);
       if (editingUser) {
-        const updated = await userService.updateUser(editingUser.id, {
+        const updatePayload: any = {
           name: userForm.name,
           email: userForm.email,
           phone: userForm.phone,
-        });
+        };
+        
+        // Add masjid assignment if masjid is selected
+        if (selectedMasjid) {
+          console.log('🕌 Updating user with masjid assignment...');
+          
+          // Convert permissions array to object with booleans
+          const permissionsObject: any = {};
+          selectedPermissions.forEach(permission => {
+            permissionsObject[permission] = true;
+          });
+          
+          updatePayload.masjid_assignment = {
+            masjid_id: selectedMasjid,
+            role: selectedRole.toLowerCase(), // Backend expects lowercase
+            permissions: {
+              can_view_complaints: permissionsObject['can_view_complaints'] || false,
+              can_answer_complaints: permissionsObject['can_answer_complaints'] || false,
+              can_view_questions: permissionsObject['can_view_questions'] || false,
+              can_answer_questions: permissionsObject['can_answer_questions'] || false,
+              can_change_prayer_times: permissionsObject['can_change_prayer_times'] || false,
+              can_create_events: permissionsObject['can_create_events'] || false,
+              can_create_notifications: permissionsObject['can_create_notifications'] || false,
+            }
+          };
+          
+          console.log('📤 Update user payload with masjid:', JSON.stringify(updatePayload, null, 2));
+        }
+        
+        const updated = await userService.updateUser(editingUser.id, updatePayload);
         dispatch(updateUserState(updated));
         toast.success('User updated successfully');
       } else {
@@ -191,7 +269,7 @@ export const Users: React.FC = () => {
         // Don't dispatch here - let loadUsers() handle it with fresh data
         // dispatch(addUser(created));
       }
-      setShowUserModal(false);
+      handleCloseModal();
       
       // Clear cache and reload users to get fresh data
       console.log('🔄 Reloading users list...');
@@ -447,12 +525,12 @@ export const Users: React.FC = () => {
       {/* Create/Edit User Modal */}
       <Modal
         isOpen={showUserModal}
-        onClose={() => setShowUserModal(false)}
+        onClose={handleCloseModal}
         title={editingUser ? 'Edit User' : 'Create New User'}
         size="large"
         footer={
           <>
-            <Button variant="outline" onClick={() => setShowUserModal(false)}>
+            <Button variant="outline" onClick={handleCloseModal}>
               Cancel
             </Button>
             <Button onClick={handleSaveUser} loading={loading}>
@@ -523,11 +601,12 @@ export const Users: React.FC = () => {
           )}
 
           {/* Masjid Assignment */}
-          {!editingUser && (
-            <div style={{ borderTop: '1px solid #E0E0E0', paddingTop: '20px' }}>
-              <div style={{ marginBottom: '12px' }}>
-                <Text variant="semiBold" size="lg">Assign to Masjid (Optional)</Text>
-              </div>
+          <div style={{ borderTop: '1px solid #E0E0E0', paddingTop: '20px' }}>
+            <div style={{ marginBottom: '12px' }}>
+              <Text variant="semiBold" size="lg">
+                {editingUser ? 'Masjid Assignment' : 'Assign to Masjid (Optional)'}
+              </Text>
+            </div>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
                 <Select
                   label="Select Masjid"
@@ -592,7 +671,6 @@ export const Users: React.FC = () => {
                 )}
               </div>
             </div>
-          )}
         </div>
       </Modal>
 

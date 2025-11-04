@@ -23,6 +23,20 @@ export interface User {
   is_super_admin: boolean;
   is_active: boolean;
   created_at: string;
+  masjid_assignment?: {
+    masjid_id: string;
+    masjid_name?: string;
+    role: 'admin' | 'imam' | 'Admin' | 'Imam';
+    permissions?: {
+      can_view_complaints?: boolean;
+      can_answer_complaints?: boolean;
+      can_view_questions?: boolean;
+      can_answer_questions?: boolean;
+      can_change_prayer_times?: boolean;
+      can_create_events?: boolean;
+      can_create_notifications?: boolean;
+    };
+  };
 }
 
 export interface RegisterData {

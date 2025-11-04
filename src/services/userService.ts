@@ -26,6 +26,19 @@ export interface UpdateUserData {
   name?: string;
   email?: string;
   phone?: string;
+  masjid_assignment?: {
+    masjid_id: string;
+    role: 'admin' | 'imam';
+    permissions?: {
+      can_view_complaints?: boolean;
+      can_answer_complaints?: boolean;
+      can_view_questions?: boolean;
+      can_answer_questions?: boolean;
+      can_change_prayer_times?: boolean;
+      can_create_events?: boolean;
+      can_create_notifications?: boolean;
+    };
+  };
 }
 
 class UserService {
