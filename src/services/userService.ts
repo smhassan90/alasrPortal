@@ -25,7 +25,9 @@ export interface CreateUserData {
 export interface UpdateUserData {
   name?: string;
   email?: string;
+  password?: string;
   phone?: string;
+  is_active?: boolean;
   masjid_assignment?: {
     masjid_id: string;
     role: 'admin' | 'imam';
@@ -38,7 +40,7 @@ export interface UpdateUserData {
       can_create_events?: boolean;
       can_create_notifications?: boolean;
     };
-  };
+  } | null; // null means remove assignment
 }
 
 class UserService {
@@ -146,10 +148,31 @@ class UserService {
   }
 
   async updateUser(id: string, data: UpdateUserData): Promise<User> {
-    const response = await api.put<User>(`/super-admin/users/${id}`, data);
+    // Trim the ID to remove any whitespace
+    const trimmedId = id.trim();
+    console.log('📤 Updating user:', trimmedId);
+    console.log('📤 Update payload:', JSON.stringify(data, null, 2));
+    
+    const response = await api.put<{ data: { user: User; masjid_assignment?: any } } | User>(
+      `/super-admin/users/${trimmedId}`,
+      data
+    );
+    
+    console.log('📥 User updated response:', response.data);
+    
     // Clear cache when updating a user
     this.clearCache();
-    return response.data;
+    
+    // Handle response format (matches create user response)
+    if ((response.data as any).data?.user) {
+      const userData = (response.data as any).data.user;
+      // Merge masjid_assignment if present in response
+      if ((response.data as any).data.masjid_assignment) {
+        userData.masjid_assignment = (response.data as any).data.masjid_assignment;
+      }
+      return userData;
+    }
+    return response.data as User;
   }
 
   async promoteToSuperAdmin(id: string): Promise<User> {

@@ -33,11 +33,12 @@ export const Users: React.FC = () => {
     is_super_admin: false,
   });
 
-  // Masjid Assignment (for user creation)
+  // Masjid Assignment (for user creation/editing)
   const [allMasajids, setAllMasajids] = useState<any[]>([]);
   const [selectedMasjid, setSelectedMasjid] = useState('');
   const [selectedRole, setSelectedRole] = useState<'Admin' | 'Imam'>('Admin');
   const [selectedPermissions, setSelectedPermissions] = useState<string[]>([]);
+  const [hadMasjidAssignment, setHadMasjidAssignment] = useState(false); // Track if user originally had assignment
 
   // View Details Modal
   const [showDetailsModal, setShowDetailsModal] = useState(false);
@@ -95,6 +96,7 @@ export const Users: React.FC = () => {
     setSelectedMasjid('');
     setSelectedRole('Admin');
     setSelectedPermissions([]);
+    setHadMasjidAssignment(false);
     setShowUserModal(true);
   };
 
@@ -106,6 +108,7 @@ export const Users: React.FC = () => {
     setSelectedMasjid('');
     setSelectedRole('Admin');
     setSelectedPermissions([]);
+    setHadMasjidAssignment(false);
   };
 
   const togglePermission = (permission: string) => {
@@ -134,6 +137,10 @@ export const Users: React.FC = () => {
       is_super_admin: user.is_super_admin || false,
     });
     
+    // Track if user originally had a masjid assignment
+    const originallyHadAssignment = !!user.masjid_assignment;
+    setHadMasjidAssignment(originallyHadAssignment);
+    
     // Load masjid assignment if user has one
     if (user.masjid_assignment) {
       setSelectedMasjid(user.masjid_assignment.masjid_id);
@@ -153,6 +160,7 @@ export const Users: React.FC = () => {
       // Try to find masjid assignment by checking all masajids
       try {
         const masjidService = (await import('../../services/masjidService')).default;
+        let foundAssignment = false;
         for (const masjid of allMasajids) {
           const members = await masjidService.getMasjidMembers(masjid.id);
           const member = members.find(m => m.user_id === user.id);
@@ -160,8 +168,15 @@ export const Users: React.FC = () => {
             setSelectedMasjid(masjid.id);
             setSelectedRole(member.role as 'Admin' | 'Imam');
             setSelectedPermissions(member.permissions || []);
+            setHadMasjidAssignment(true);
+            foundAssignment = true;
             break;
           }
+        }
+        if (!foundAssignment) {
+          setSelectedMasjid('');
+          setSelectedRole('Admin');
+          setSelectedPermissions([]);
         }
       } catch (error) {
         console.error('Failed to load masjid assignment:', error);
@@ -190,7 +205,11 @@ export const Users: React.FC = () => {
           phone: userForm.phone,
         };
         
-        // Add masjid assignment if masjid is selected
+        // Handle masjid assignment based on API spec:
+        // - If selectedMasjid is provided → update/create assignment
+        // - If selectedMasjid is empty but user originally had assignment → send null to remove
+        // - If selectedMasjid is empty and user never had assignment → omit (keep existing)
+        
         if (selectedMasjid) {
           console.log('🕌 Updating user with masjid assignment...');
           
@@ -215,7 +234,12 @@ export const Users: React.FC = () => {
           };
           
           console.log('📤 Update user payload with masjid:', JSON.stringify(updatePayload, null, 2));
+        } else if (hadMasjidAssignment) {
+          // User originally had assignment but now cleared it → remove assignment
+          console.log('🗑️ Removing masjid assignment...');
+          updatePayload.masjid_assignment = null;
         }
+        // If no masjid selected and never had one, omit masjid_assignment (keeps existing)
         
         const updated = await userService.updateUser(editingUser.id, updatePayload);
         dispatch(updateUserState(updated));
@@ -608,14 +632,33 @@ export const Users: React.FC = () => {
               </Text>
             </div>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-                <Select
-                  label="Select Masjid"
-                  options={allMasajids.map((m) => ({ value: m.id, label: m.name }))}
-                  value={selectedMasjid}
-                  onChange={setSelectedMasjid}
-                  placeholder="Select a masjid"
-                  fullWidth
-                />
+                <div style={{ display: 'flex', gap: '12px', alignItems: 'flex-end' }}>
+                  <div style={{ flex: 1 }}>
+                    <Select
+                      label="Select Masjid"
+                      options={allMasajids.map((m) => ({ value: m.id, label: m.name }))}
+                      value={selectedMasjid}
+                      onChange={setSelectedMasjid}
+                      placeholder="Select a masjid"
+                      fullWidth
+                    />
+                  </div>
+                  {editingUser && hadMasjidAssignment && selectedMasjid && (
+                    <div style={{ marginBottom: '4px' }}>
+                      <Button
+                        size="small"
+                        variant="outline"
+                        onClick={() => {
+                          setSelectedMasjid('');
+                          setSelectedRole('Admin');
+                          setSelectedPermissions([]);
+                        }}
+                      >
+                        Remove Assignment
+                      </Button>
+                    </div>
+                  )}
+                </div>
 
                 {selectedMasjid && (
                   <>
