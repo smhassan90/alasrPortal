@@ -29,6 +29,9 @@ api.interceptors.request.use(
     // Log requests in development
     if (import.meta.env.DEV) {
       console.log('📤 API Request:', config.method?.toUpperCase(), config.url);
+      console.log('📤 Full URL:', `${config.baseURL}${config.url}`);
+      console.log('📤 Request Data:', JSON.stringify(config.data, null, 2));
+      console.log('📤 Request Headers:', config.headers);
       if (!API_BASE_URL) {
         console.error('⚠️ Warning: API_BASE_URL is undefined! Full URL will be:', config.url);
       }
@@ -38,6 +41,11 @@ api.interceptors.request.use(
     const token = localStorage.getItem('access_token');
     if (token && config.headers) {
       config.headers.Authorization = `Bearer ${token}`;
+      if (import.meta.env.DEV) {
+        console.log('🔑 Auth token added:', token.substring(0, 20) + '...');
+      }
+    } else if (import.meta.env.DEV) {
+      console.warn('⚠️ No auth token found in localStorage');
     }
     
     return config;

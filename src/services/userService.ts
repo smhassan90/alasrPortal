@@ -151,7 +151,7 @@ class UserService {
     // Trim the ID to remove any whitespace
     const trimmedId = id.trim();
     console.log('📤 Updating user:', trimmedId);
-    console.log('📤 Update payload:', JSON.stringify(data, null, 2));
+    console.log('📤 Update payload (raw):', JSON.stringify(data, null, 2));
     
     // Clean up the payload - remove undefined values but keep null values (for masjid_assignment removal)
     const cleanedData: any = {};
@@ -162,13 +162,23 @@ class UserService {
       }
     });
     
+    // Ensure masjid_assignment null is preserved correctly
+    if ('masjid_assignment' in data && data.masjid_assignment === null) {
+      cleanedData.masjid_assignment = null;
+    }
+    
     console.log('📤 Cleaned payload:', JSON.stringify(cleanedData, null, 2));
     console.log('📤 Full URL will be:', `${import.meta.env.VITE_API_BASE_URL}/super-admin/users/${trimmedId}`);
     
     try {
       const response = await api.put<{ data: { user: User; masjid_assignment?: any } } | User>(
         `/super-admin/users/${trimmedId}`,
-        cleanedData
+        cleanedData,
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
       );
       
       console.log('📥 User updated response:', response.data);
@@ -196,6 +206,7 @@ class UserService {
       console.error('❌ Full URL:', `${error.config?.baseURL}${error.config?.url}`);
       console.error('❌ Request payload:', JSON.stringify(cleanedData, null, 2));
       console.error('❌ Request headers:', error.config?.headers);
+      console.error('❌ Response headers:', error.response?.headers);
       
       throw error;
     }
