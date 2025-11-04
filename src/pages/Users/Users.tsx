@@ -202,8 +202,12 @@ export const Users: React.FC = () => {
         const updatePayload: any = {
           name: userForm.name,
           email: userForm.email,
-          phone: userForm.phone,
         };
+        
+        // Only include phone if it has a value
+        if (userForm.phone && userForm.phone.trim()) {
+          updatePayload.phone = userForm.phone.trim();
+        }
         
         // Handle masjid assignment based on API spec:
         // - If selectedMasjid is provided → update/create assignment

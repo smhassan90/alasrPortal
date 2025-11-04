@@ -153,26 +153,52 @@ class UserService {
     console.log('📤 Updating user:', trimmedId);
     console.log('📤 Update payload:', JSON.stringify(data, null, 2));
     
-    const response = await api.put<{ data: { user: User; masjid_assignment?: any } } | User>(
-      `/super-admin/users/${trimmedId}`,
-      data
-    );
-    
-    console.log('📥 User updated response:', response.data);
-    
-    // Clear cache when updating a user
-    this.clearCache();
-    
-    // Handle response format (matches create user response)
-    if ((response.data as any).data?.user) {
-      const userData = (response.data as any).data.user;
-      // Merge masjid_assignment if present in response
-      if ((response.data as any).data.masjid_assignment) {
-        userData.masjid_assignment = (response.data as any).data.masjid_assignment;
+    // Clean up the payload - remove undefined values but keep null values (for masjid_assignment removal)
+    const cleanedData: any = {};
+    Object.keys(data).forEach(key => {
+      const value = (data as any)[key];
+      if (value !== undefined) {
+        cleanedData[key] = value;
       }
-      return userData;
+    });
+    
+    console.log('📤 Cleaned payload:', JSON.stringify(cleanedData, null, 2));
+    console.log('📤 Full URL will be:', `${import.meta.env.VITE_API_BASE_URL}/super-admin/users/${trimmedId}`);
+    
+    try {
+      const response = await api.put<{ data: { user: User; masjid_assignment?: any } } | User>(
+        `/super-admin/users/${trimmedId}`,
+        cleanedData
+      );
+      
+      console.log('📥 User updated response:', response.data);
+      
+      // Clear cache when updating a user
+      this.clearCache();
+      
+      // Handle response format (matches create user response)
+      if ((response.data as any).data?.user) {
+        const userData = (response.data as any).data.user;
+        // Merge masjid_assignment if present in response
+        if ((response.data as any).data.masjid_assignment) {
+          userData.masjid_assignment = (response.data as any).data.masjid_assignment;
+        }
+        return userData;
+      }
+      return response.data as User;
+    } catch (error: any) {
+      console.error('❌ Failed to update user');
+      console.error('❌ Error status:', error.response?.status);
+      console.error('❌ Error data:', error.response?.data);
+      console.error('❌ Error message:', error.message);
+      console.error('❌ Request URL:', error.config?.url);
+      console.error('❌ Request baseURL:', error.config?.baseURL);
+      console.error('❌ Full URL:', `${error.config?.baseURL}${error.config?.url}`);
+      console.error('❌ Request payload:', JSON.stringify(cleanedData, null, 2));
+      console.error('❌ Request headers:', error.config?.headers);
+      
+      throw error;
     }
-    return response.data as User;
   }
 
   async promoteToSuperAdmin(id: string): Promise<User> {
