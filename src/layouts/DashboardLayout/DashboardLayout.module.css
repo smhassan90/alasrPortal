@@ -1,19 +1,22 @@
 .dashboardLayout {
   width: 100%;
+  padding: 32px;
+  max-width: 1600px;
+  margin: 0 auto;
 }
 
 .statsGrid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 24px;
-  margin-bottom: 24px;
+  gap: 28px;
+  margin-bottom: 32px;
 }
 
 .chartsGrid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 24px;
-  margin-bottom: 24px;
+  gap: 28px;
+  margin-bottom: 32px;
 }
 
 .fullWidth {

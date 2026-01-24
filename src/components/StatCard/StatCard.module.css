@@ -1,13 +1,26 @@
 .statCard {
   display: flex;
   align-items: center;
-  gap: 16px;
-  padding: 24px;
+  gap: 20px;
+  padding: 28px;
   background: #FFFFFF;
   border: 1px solid #E0E0E0;
-  border-radius: 12px;
-  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
-  transition: all 0.3s ease;
+  border-radius: 16px;
+  box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.06);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.statCard::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 100%;
+  background: transparent;
+  transition: background 0.3s ease;
 }
 
 .statCard.clickable {
@@ -15,22 +28,32 @@
 }
 
 .statCard.clickable:hover {
-  box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
-  transform: translateY(-2px);
+  box-shadow: 0px 8px 24px rgba(0, 0, 0, 0.12);
+  transform: translateY(-4px);
+  border-color: #007F5F;
+}
+
+.statCard.clickable:hover::before {
+  background: #007F5F;
 }
 
 .iconContainer {
-  width: 64px;
-  height: 64px;
-  border-radius: 12px;
+  width: 72px;
+  height: 72px;
+  border-radius: 14px;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
+  transition: transform 0.3s ease;
+}
+
+.statCard.clickable:hover .iconContainer {
+  transform: scale(1.1) rotate(5deg);
 }
 
 .icon {
-  font-size: 32px;
+  font-size: 36px;
 }
 
 .content {
@@ -46,12 +69,13 @@
 }
 
 .value {
-  font-size: 32px;
+  font-size: 36px;
   font-weight: 700;
   color: #222222;
   margin: 0;
   font-family: 'Poppins', sans-serif;
-  line-height: 1;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
 }
 
 .trend {

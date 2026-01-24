@@ -5,4 +5,5 @@ export { Masajids } from './Masajids/Masajids';
 export { Questions } from './Questions/Questions';
 export { Analytics } from './Analytics/Analytics';
 export { Settings } from './Settings/Settings';
+export { AppConfig } from './AppConfig/AppConfig';
 

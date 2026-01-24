@@ -1,9 +1,10 @@
 .container {
   background: #FFFFFF;
   border: 1px solid #E0E0E0;
-  border-radius: 12px;
+  border-radius: 16px;
   overflow: hidden;
   position: relative;
+  box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.04);
 }
 
 .table {
@@ -12,17 +13,19 @@
 }
 
 .thead {
-  background: #F5F5F5;
+  background: linear-gradient(to bottom, #FAFAFA, #F5F5F5);
   border-bottom: 2px solid #E0E0E0;
 }
 
 .th {
-  padding: 16px;
-  font-weight: 600;
-  font-size: 14px;
+  padding: 18px 20px;
+  font-weight: 700;
+  font-size: 13px;
   color: #222222;
   text-align: left;
   font-family: 'Poppins', sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 .th.center {
@@ -34,8 +37,8 @@
 }
 
 .tbody tr {
-  border-bottom: 1px solid #E0E0E0;
-  transition: background 0.2s;
+  border-bottom: 1px solid #F0F0F0;
+  transition: all 0.2s ease;
 }
 
 .tbody tr:last-child {
@@ -47,14 +50,17 @@
 }
 
 .tbody tr.clickable:hover {
-  background: #F5F5F5;
+  background: linear-gradient(to right, rgba(0, 127, 95, 0.03), #FAFAFA);
+  transform: scale(1.001);
+  box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.04);
 }
 
 .td {
-  padding: 16px;
+  padding: 18px 20px;
   font-size: 14px;
   color: #222222;
   font-family: 'Poppins', sans-serif;
+  line-height: 1.5;
 }
 
 .td.center {

@@ -17,6 +17,7 @@ import {
   Questions,
   Analytics,
   Settings,
+  AppConfig,
 } from './pages';
 import './App.css';
 
@@ -69,6 +70,7 @@ const AppContent: React.FC = () => {
     { label: 'Questions', icon: '❓', path: '/questions', badge: pendingQuestionsCount || undefined },
     { label: 'Analytics', icon: '📈', path: '/analytics' },
     { label: 'Settings', icon: '⚙️', path: '/settings' },
+    { label: 'App Config', icon: '🔧', path: '/admin/config/app' },
     { label: 'Logout', icon: '🚪', path: '', onClick: handleLogout },
   ];
 
@@ -111,6 +113,7 @@ const AppContent: React.FC = () => {
           <Route path="questions" element={<Questions />} />
           <Route path="analytics" element={<Analytics />} />
           <Route path="settings" element={<Settings />} />
+          <Route path="admin/config/app" element={<AppConfig />} />
         </Route>
       </Routes>
     </BrowserRouter>

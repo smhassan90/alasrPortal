@@ -15,6 +15,8 @@ export interface InputProps {
   fullWidth?: boolean;
   className?: string;
   name?: string;
+  min?: number;
+  max?: number;
 }
 
 export const Input: React.FC<InputProps> = ({
@@ -31,6 +33,8 @@ export const Input: React.FC<InputProps> = ({
   fullWidth = false,
   className = '',
   name,
+  min,
+  max,
 }) => {
   const containerClasses = [
     styles.container,
@@ -66,6 +70,8 @@ export const Input: React.FC<InputProps> = ({
           onChange={(e) => onChange(e.target.value)}
           disabled={disabled}
           name={name}
+          min={min}
+          max={max}
         />
       </div>
       {error && <span className={styles.errorMessage}>{error}</span>}
