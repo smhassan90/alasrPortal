@@ -14,6 +14,13 @@ export interface Masjid {
   is_active: boolean;
   created_at: string;
   updated_at: string;
+  created_by?: string; // User ID who created the masjid
+  creator_id?: string; // Alternative field name
+  creator?: {
+    id: string;
+    name?: string;
+    email?: string;
+  };
 }
 
 export interface CreateMasjidData {

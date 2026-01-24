@@ -47,6 +47,7 @@ export const Dashboard: React.FC = () => {
     totalUsers: 0,
     totalQuestions: 0,
     pendingQuestions: 0,
+    uniqueMasjidCreators: 0,
   });
   const [monthlyMasjidsData, setMonthlyMasjidsData] = useState<MonthlyData[]>([]);
   const [questionsData, setQuestionsData] = useState<QuestionsMonthlyData[]>([]);
@@ -75,11 +76,15 @@ export const Dashboard: React.FC = () => {
 
       const pendingCount = questions.filter(q => q.status === 'New').length;
 
+      // Calculate unique masjid creators
+      const uniqueCreators = calculateUniqueMasjidCreators(masajids);
+
       setStats({
         totalMasajids: masajids.length,
         totalUsers: users.length,
         totalQuestions: questions.length,
         pendingQuestions: pendingCount,
+        uniqueMasjidCreators: uniqueCreators,
       });
 
       // Calculate monthly masajids data from created_at
@@ -181,6 +186,21 @@ export const Dashboard: React.FC = () => {
     ];
   };
 
+  // Calculate unique masjid creators
+  const calculateUniqueMasjidCreators = (masajids: any[]): number => {
+    const creatorIds = new Set<string>();
+    
+    masajids.forEach(masjid => {
+      // Check multiple possible field names for creator
+      const creatorId = masjid.created_by || masjid.creator_id || masjid.creator?.id;
+      if (creatorId) {
+        creatorIds.add(creatorId);
+      }
+    });
+    
+    return creatorIds.size;
+  };
+
   const activityColumns: TableColumn[] = [
     { key: 'user', label: 'User', width: '25%' },
     {
@@ -228,6 +248,13 @@ export const Dashboard: React.FC = () => {
           icon="⏳"
           color={colors.warning}
           onClick={() => navigate('/questions')}
+        />
+        <StatCard
+          title="Masjid Creators"
+          value={stats.uniqueMasjidCreators}
+          icon="👤"
+          color={colors.success}
+          onClick={() => navigate('/masajids')}
         />
       </StatsGrid>
 
@@ -290,7 +317,7 @@ export const Dashboard: React.FC = () => {
                 labelLine={false}
                 label={(props: any) => `${props.name}: ${(props.percent * 100).toFixed(0)}%`}
                 outerRadius={100}
-                fill="#8884d8"
+                fill={colors.primary}
                 dataKey="value"
               >
                 {userDistributionData.map((entry, index) => (

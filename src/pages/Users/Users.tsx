@@ -794,11 +794,11 @@ export const Users: React.FC = () => {
             </Text>
             <div style={{
               padding: '16px',
-              backgroundColor: '#FFF3CD',
+              backgroundColor: '#F5F5F5',
               borderRadius: '8px',
               border: '1px solid #FFC107',
             }}>
-              <Text size="sm" color="#856404">
+              <Text size="sm" color="#222222">
                 ⚠️ <strong>Warning:</strong> This action cannot be undone. All user data and their associations with masajids will be permanently deleted.
               </Text>
             </div>
