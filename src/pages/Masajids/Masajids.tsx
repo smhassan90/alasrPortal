@@ -27,6 +27,9 @@ const PERMISSIONS = [
   'can_answer_complaints',
 ];
 
+const isAskImamEnabled = (value: boolean | number | string | undefined): boolean =>
+  value !== false && value !== 0 && value !== '0';
+
 export const Masajids: React.FC = () => {
   const dispatch = useAppDispatch();
   const masajids = useAppSelector((state) => state.masajids.masajids) || [];
@@ -142,10 +145,7 @@ export const Masajids: React.FC = () => {
       postal_code: masjid.postal_code || '',
       contact_email: masjid.contact_email || '',
       contact_phone: masjid.contact_phone || '',
-      ask_imam_enabled:
-        masjid.ask_imam_enabled !== false &&
-        masjid.ask_imam_enabled !== 0 &&
-        masjid.ask_imam_enabled !== '0',
+      ask_imam_enabled: isAskImamEnabled(masjid.ask_imam_enabled),
       asr_fiqh: masjid.asr_fiqh === 'shafai' ? 'shafai' : 'hanafi',
     });
     setShowMasjidModal(true);
@@ -355,7 +355,7 @@ export const Masajids: React.FC = () => {
       label: 'Ask Imam',
       width: '10%',
       render: (value) =>
-        value !== false && value !== 0 && value !== '0' ? (
+        isAskImamEnabled(value) ? (
           <Badge variant="success">Enabled</Badge>
         ) : (
           <Badge variant="error">Disabled</Badge>
