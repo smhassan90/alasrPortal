@@ -14,6 +14,12 @@ import masjidService from '../../services/masjidService';
 import type { Masjid, MasjidMember } from '../../services/masjidService';
 import locationService, { withCurrentValue } from '../../services/locationService';
 import type { LocationCountry, AreaOption } from '../../services/locationService';
+import {
+  FALLBACK_LOCATION_CATALOG,
+  getFallbackAreas,
+  mergeAreaOptions,
+  mergeLocationCatalogs,
+} from '../../data/locations';
 import userService from '../../services/userService';
 import type { User } from '../../services/authService';
 import { useAppDispatch, useAppSelector } from '../../redux/hooks';
@@ -58,7 +64,7 @@ export const Masajids: React.FC = () => {
   const [showMasjidModal, setShowMasjidModal] = useState(false);
   const [editingMasjid, setEditingMasjid] = useState<Masjid | null>(null);
   const [masjidForm, setMasjidForm] = useState({ ...EMPTY_MASJID_FORM });
-  const [locationCatalog, setLocationCatalog] = useState<LocationCountry[]>([]);
+  const [locationCatalog, setLocationCatalog] = useState<LocationCountry[]>(FALLBACK_LOCATION_CATALOG);
   const [areaOptions, setAreaOptions] = useState<AreaOption[]>([]);
   const [showAreaModal, setShowAreaModal] = useState(false);
   const [areaModalSource, setAreaModalSource] = useState<'form' | 'manage'>('form');
@@ -143,20 +149,21 @@ export const Masajids: React.FC = () => {
   const loadLocationCatalog = async () => {
     try {
       const countries = await locationService.getCatalog();
-      setLocationCatalog(countries);
+      setLocationCatalog(mergeLocationCatalogs(FALLBACK_LOCATION_CATALOG, countries));
     } catch (error) {
       console.error('Failed to load location catalog', error);
-      toast.error('Failed to load countries, states and cities');
+      setLocationCatalog(FALLBACK_LOCATION_CATALOG);
     }
   };
 
   const loadAreas = async (country: string, state: string, city: string) => {
+    const fallbackAreas = getFallbackAreas(country, state, city);
     try {
       const areas = await locationService.getAreas(country, state, city);
-      setAreaOptions(areas);
+      setAreaOptions(mergeAreaOptions(fallbackAreas, areas));
     } catch (error) {
       console.error('Failed to load areas', error);
-      setAreaOptions([]);
+      setAreaOptions(fallbackAreas);
     }
   };
 
@@ -187,8 +194,12 @@ export const Masajids: React.FC = () => {
 
   const handleSaveMasjid = async () => {
     try {
-      if (!masjidForm.name) {
+      if (!masjidForm.name.trim()) {
         toast.error('Masjid name is required');
+        return;
+      }
+      if (!masjidForm.country || !masjidForm.state || !masjidForm.city) {
+        toast.error('Country, state and city are required');
         return;
       }
 
@@ -681,6 +692,7 @@ export const Masajids: React.FC = () => {
               })
             }
             placeholder="Select country"
+            required
             fullWidth
           />
           <Select
@@ -697,6 +709,7 @@ export const Masajids: React.FC = () => {
             }
             placeholder={masjidForm.country ? 'Select state' : 'Select country first'}
             disabled={!masjidForm.country}
+            required
             fullWidth
           />
           <Select
@@ -712,6 +725,7 @@ export const Masajids: React.FC = () => {
             }
             placeholder={masjidForm.state ? 'Select city' : 'Select state first'}
             disabled={!masjidForm.state}
+            required
             fullWidth
           />
           <div>
