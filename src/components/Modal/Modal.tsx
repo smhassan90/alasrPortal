@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import styles from './Modal.module.css';
 
 export interface ModalProps {
@@ -45,7 +46,7 @@ export const Modal: React.FC<ModalProps> = ({
     .filter(Boolean)
     .join(' ');
 
-  return (
+  return createPortal(
     <div className={styles.overlay} onClick={handleOverlayClick}>
       <div className={modalClasses}>
         {title && (
@@ -59,7 +60,8 @@ export const Modal: React.FC<ModalProps> = ({
         <div className={styles.content}>{children}</div>
         {footer && <div className={styles.footer}>{footer}</div>}
       </div>
-    </div>
+    </div>,
+    document.body
   );
 };
 

@@ -30,7 +30,8 @@
   border: 1px solid var(--color-border);
   border-radius: 6px;
   font-size: 14px;
-  background: var(--color-surface);
+  background: #FFFFFF;
+  background: var(--color-surface, #FFFFFF);
   transition: border-color 0.15s ease, box-shadow 0.15s ease;
   outline: none;
   box-sizing: border-box;

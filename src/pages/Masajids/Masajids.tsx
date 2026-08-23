@@ -12,6 +12,8 @@ import { Text } from '../../components/Text/Text';
 import { toast } from 'react-toastify';
 import masjidService from '../../services/masjidService';
 import type { Masjid, MasjidMember } from '../../services/masjidService';
+import locationService, { withCurrentValue } from '../../services/locationService';
+import type { LocationCountry, AreaOption } from '../../services/locationService';
 import userService from '../../services/userService';
 import type { User } from '../../services/authService';
 import { useAppDispatch, useAppSelector } from '../../redux/hooks';
@@ -30,6 +32,21 @@ const PERMISSIONS = [
 const isAskImamEnabled = (value: boolean | number | string | undefined): boolean =>
   value !== false && value !== 0 && value !== '0';
 
+const EMPTY_MASJID_FORM = {
+  name: '',
+  location: '',
+  address: '',
+  area: '',
+  city: '',
+  state: '',
+  country: 'Pakistan',
+  postal_code: '',
+  contact_email: '',
+  contact_phone: '',
+  ask_imam_enabled: true,
+  asr_fiqh: 'hanafi' as 'hanafi' | 'shafai',
+};
+
 export const Masajids: React.FC = () => {
   const dispatch = useAppDispatch();
   const masajids = useAppSelector((state) => state.masajids.masajids) || [];
@@ -40,19 +57,18 @@ export const Masajids: React.FC = () => {
   // Create/Edit Masjid Modal
   const [showMasjidModal, setShowMasjidModal] = useState(false);
   const [editingMasjid, setEditingMasjid] = useState<Masjid | null>(null);
-  const [masjidForm, setMasjidForm] = useState({
-    name: '',
-    location: '',
-    address: '',
-    city: '',
+  const [masjidForm, setMasjidForm] = useState({ ...EMPTY_MASJID_FORM });
+  const [locationCatalog, setLocationCatalog] = useState<LocationCountry[]>([]);
+  const [areaOptions, setAreaOptions] = useState<AreaOption[]>([]);
+  const [showAreaModal, setShowAreaModal] = useState(false);
+  const [areaModalSource, setAreaModalSource] = useState<'form' | 'manage'>('form');
+  const [newAreaName, setNewAreaName] = useState('');
+  const [areaModalLocation, setAreaModalLocation] = useState({
+    country: 'Pakistan',
     state: '',
-    country: '',
-    postal_code: '',
-    contact_email: '',
-    contact_phone: '',
-    ask_imam_enabled: true,
-    asr_fiqh: 'hanafi' as 'hanafi' | 'shafai',
+    city: '',
   });
+  const [savingArea, setSavingArea] = useState(false);
 
   // Members Management Modal
   const [showMembersModal, setShowMembersModal] = useState(false);
@@ -71,7 +87,16 @@ export const Masajids: React.FC = () => {
   useEffect(() => {
     loadMasajids();
     loadAllUsers();
+    loadLocationCatalog();
   }, []);
+
+  useEffect(() => {
+    if (masjidForm.country && masjidForm.state && masjidForm.city) {
+      loadAreas(masjidForm.country, masjidForm.state, masjidForm.city);
+    } else {
+      setAreaOptions([]);
+    }
+  }, [masjidForm.country, masjidForm.state, masjidForm.city]);
 
   const loadMasajids = async () => {
     try {
@@ -115,21 +140,29 @@ export const Masajids: React.FC = () => {
     }
   };
 
+  const loadLocationCatalog = async () => {
+    try {
+      const countries = await locationService.getCatalog();
+      setLocationCatalog(countries);
+    } catch (error) {
+      console.error('Failed to load location catalog', error);
+      toast.error('Failed to load countries, states and cities');
+    }
+  };
+
+  const loadAreas = async (country: string, state: string, city: string) => {
+    try {
+      const areas = await locationService.getAreas(country, state, city);
+      setAreaOptions(areas);
+    } catch (error) {
+      console.error('Failed to load areas', error);
+      setAreaOptions([]);
+    }
+  };
+
   const handleCreateMasjid = () => {
     setEditingMasjid(null);
-    setMasjidForm({
-      name: '',
-      location: '',
-      address: '',
-      city: '',
-      state: '',
-      country: '',
-      postal_code: '',
-      contact_email: '',
-      contact_phone: '',
-      ask_imam_enabled: true,
-      asr_fiqh: 'hanafi',
-    });
+    setMasjidForm({ ...EMPTY_MASJID_FORM });
     setShowMasjidModal(true);
   };
 
@@ -139,6 +172,7 @@ export const Masajids: React.FC = () => {
       name: masjid.name,
       location: masjid.location || '',
       address: masjid.address || '',
+      area: masjid.area || '',
       city: masjid.city || '',
       state: masjid.state || '',
       country: masjid.country || '',
@@ -334,10 +368,103 @@ export const Masajids: React.FC = () => {
     setMemberForm((prev) => ({ ...prev, permissions: [] }));
   };
 
+  const selectedCountry = locationCatalog.find((country) => country.name === masjidForm.country);
+  const selectedState = selectedCountry?.states.find((state) => state.name === masjidForm.state);
+  const countryOptions = withCurrentValue(
+    locationCatalog.map((country) => ({ value: country.name, label: country.name })),
+    masjidForm.country
+  );
+  const stateOptions = withCurrentValue(
+    (selectedCountry?.states || []).map((state) => ({ value: state.name, label: state.name })),
+    masjidForm.state
+  );
+  const cityOptions = withCurrentValue(
+    (selectedState?.cities || []).map((city) => ({ value: city, label: city })),
+    masjidForm.city
+  );
+  const areaSelectOptions = withCurrentValue(
+    areaOptions.map((area) => ({ value: area.name, label: area.name })),
+    masjidForm.area
+  );
+
+  const modalCountry = locationCatalog.find((country) => country.name === areaModalLocation.country);
+  const modalState = modalCountry?.states.find((state) => state.name === areaModalLocation.state);
+  const modalCountryOptions = withCurrentValue(
+    locationCatalog.map((country) => ({ value: country.name, label: country.name })),
+    areaModalLocation.country
+  );
+  const modalStateOptions = withCurrentValue(
+    (modalCountry?.states || []).map((state) => ({ value: state.name, label: state.name })),
+    areaModalLocation.state
+  );
+  const modalCityOptions = withCurrentValue(
+    (modalState?.cities || []).map((city) => ({ value: city, label: city })),
+    areaModalLocation.city
+  );
+
+  const openAddAreaFromForm = () => {
+    if (!masjidForm.country || !masjidForm.state || !masjidForm.city) {
+      toast.error('Please select country, state and city first');
+      return;
+    }
+    setAreaModalSource('form');
+    setAreaModalLocation({
+      country: masjidForm.country,
+      state: masjidForm.state,
+      city: masjidForm.city,
+    });
+    setNewAreaName('');
+    setShowAreaModal(true);
+  };
+
+  const openManageAreas = () => {
+    setAreaModalSource('manage');
+    setAreaModalLocation({
+      country: masjidForm.country || 'Pakistan',
+      state: masjidForm.state || '',
+      city: masjidForm.city || '',
+    });
+    setNewAreaName('');
+    setShowAreaModal(true);
+  };
+
+  const handleSaveArea = async () => {
+    const name = newAreaName.trim();
+    const { country, state, city } = areaModalLocation;
+    if (!country || !state || !city) {
+      toast.error('Please select country, state and city');
+      return;
+    }
+    if (!name) {
+      toast.error('Area name is required');
+      return;
+    }
+
+    try {
+      setSavingArea(true);
+      const created = await locationService.createArea({ name, country, state, city });
+      toast.success(`Area "${created.name}" added`);
+      setShowAreaModal(false);
+      setNewAreaName('');
+      if (masjidForm.country === country && masjidForm.state === state && masjidForm.city === city) {
+        await loadAreas(country, state, city);
+        if (areaModalSource === 'form') {
+          setMasjidForm((prev) => ({ ...prev, area: created.name }));
+        }
+      }
+    } catch (error: any) {
+      toast.error(error.response?.data?.message || 'Failed to add area');
+    } finally {
+      setSavingArea(false);
+    }
+  };
+
   const filteredMasajids = masajids.filter((masjid) => {
+    const query = searchTerm.toLowerCase();
     const matchesSearch =
-      masjid.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      (masjid.city && masjid.city.toLowerCase().includes(searchTerm.toLowerCase()));
+      masjid.name.toLowerCase().includes(query) ||
+      (masjid.city && masjid.city.toLowerCase().includes(query)) ||
+      (masjid.area && masjid.area.toLowerCase().includes(query));
     const matchesStatus =
       filterStatus === 'all' ||
       (filterStatus === 'active' && masjid.is_active) ||
@@ -346,8 +473,9 @@ export const Masajids: React.FC = () => {
   });
 
   const columns: TableColumn[] = [
-    { key: 'name', label: 'Masjid Name', width: '25%' },
-    { key: 'city', label: 'City', width: '15%' },
+    { key: 'name', label: 'Masjid Name', width: '20%' },
+    { key: 'area', label: 'Area', width: '12%' },
+    { key: 'city', label: 'City', width: '12%' },
     { key: 'state', label: 'State', width: '10%' },
     { key: 'country', label: 'Country', width: '10%' },
     {
@@ -459,16 +587,21 @@ export const Masajids: React.FC = () => {
         title="Masajids Management"
         subtitle={`${filteredMasajids.length} masajids found`}
         headerAction={
-          <Button onClick={handleCreateMasjid} icon={<span>➕</span>}>
-            Create Masjid
-          </Button>
+          <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+            <Button variant="outline" onClick={openManageAreas} icon={<span>📍</span>}>
+              Add Area
+            </Button>
+            <Button onClick={handleCreateMasjid} icon={<span>➕</span>}>
+              Create Masjid
+            </Button>
+          </div>
         }
         padding="none"
       >
         <div style={{ padding: '24px', borderBottom: '1px solid #E0E0E0' }}>
           <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '16px' }}>
             <Input
-              placeholder="Search by name or city..."
+              placeholder="Search by name, city or area..."
               value={searchTerm}
               onChange={setSearchTerm}
               icon={<span>🔍</span>}
@@ -534,24 +667,69 @@ export const Masajids: React.FC = () => {
             rows={2}
             fullWidth
           />
-          <Input
-            label="City"
-            value={masjidForm.city}
-            onChange={(value) => setMasjidForm({ ...masjidForm, city: value })}
-            fullWidth
-          />
-          <Input
-            label="State"
-            value={masjidForm.state}
-            onChange={(value) => setMasjidForm({ ...masjidForm, state: value })}
-            fullWidth
-          />
-          <Input
+          <Select
             label="Country"
+            options={countryOptions}
             value={masjidForm.country}
-            onChange={(value) => setMasjidForm({ ...masjidForm, country: value })}
+            onChange={(value) =>
+              setMasjidForm({
+                ...masjidForm,
+                country: value,
+                state: '',
+                city: '',
+                area: '',
+              })
+            }
+            placeholder="Select country"
             fullWidth
           />
+          <Select
+            label="State"
+            options={stateOptions}
+            value={masjidForm.state}
+            onChange={(value) =>
+              setMasjidForm({
+                ...masjidForm,
+                state: value,
+                city: '',
+                area: '',
+              })
+            }
+            placeholder={masjidForm.country ? 'Select state' : 'Select country first'}
+            disabled={!masjidForm.country}
+            fullWidth
+          />
+          <Select
+            label="City"
+            options={cityOptions}
+            value={masjidForm.city}
+            onChange={(value) =>
+              setMasjidForm({
+                ...masjidForm,
+                city: value,
+                area: '',
+              })
+            }
+            placeholder={masjidForm.state ? 'Select city' : 'Select state first'}
+            disabled={!masjidForm.state}
+            fullWidth
+          />
+          <div>
+            <Select
+              label="Area"
+              options={areaSelectOptions}
+              value={masjidForm.area}
+              onChange={(value) => setMasjidForm({ ...masjidForm, area: value })}
+              placeholder={masjidForm.city ? 'Select area' : 'Select city first'}
+              disabled={!masjidForm.city}
+              fullWidth
+            />
+            <div style={{ marginTop: '8px' }}>
+              <Button size="small" variant="outline" onClick={openAddAreaFromForm}>
+                Add new area
+              </Button>
+            </div>
+          </div>
           <Input
             label="Postal Code"
             value={masjidForm.postal_code}
@@ -713,6 +891,66 @@ export const Masajids: React.FC = () => {
               ))}
             </div>
           </div>
+        </div>
+      </Modal>
+
+      <Modal
+        isOpen={showAreaModal}
+        onClose={() => setShowAreaModal(false)}
+        title={areaModalSource === 'manage' ? 'Add Area' : 'Add New Area'}
+        size="small"
+        footer={
+          <>
+            <Button variant="outline" onClick={() => setShowAreaModal(false)}>
+              Cancel
+            </Button>
+            <Button onClick={handleSaveArea} loading={savingArea}>
+              Save Area
+            </Button>
+          </>
+        }
+      >
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+          <Select
+            label="Country"
+            options={modalCountryOptions}
+            value={areaModalLocation.country}
+            onChange={(value) =>
+              setAreaModalLocation({ country: value, state: '', city: '' })
+            }
+            placeholder="Select country"
+            fullWidth
+          />
+          <Select
+            label="State"
+            options={modalStateOptions}
+            value={areaModalLocation.state}
+            onChange={(value) =>
+              setAreaModalLocation((prev) => ({ ...prev, state: value, city: '' }))
+            }
+            placeholder={areaModalLocation.country ? 'Select state' : 'Select country first'}
+            disabled={!areaModalLocation.country}
+            fullWidth
+          />
+          <Select
+            label="City"
+            options={modalCityOptions}
+            value={areaModalLocation.city}
+            onChange={(value) =>
+              setAreaModalLocation((prev) => ({ ...prev, city: value }))
+            }
+            placeholder={areaModalLocation.state ? 'Select city' : 'Select state first'}
+            disabled={!areaModalLocation.state}
+            fullWidth
+          />
+          <Input
+            label="Area Name"
+            value={newAreaName}
+            onChange={setNewAreaName}
+            placeholder="e.g. Gulshan-e-Iqbal"
+            required
+            fullWidth
+          />
         </div>
       </Modal>
     </>

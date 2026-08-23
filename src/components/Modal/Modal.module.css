@@ -1,8 +1,8 @@
 .overlay {
   position: fixed;
   inset: 0;
-  background: rgba(19, 40, 32, 0.45);
-  z-index: 1000;
+  background: rgba(18, 53, 42, 0.62);
+  z-index: 2000;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -10,14 +10,16 @@
 }
 
 .modal {
-  background: var(--color-surface);
+  background-color: #FFFFFF;
   border-radius: 10px;
-  box-shadow: 0 8px 24px rgba(19, 40, 32, 0.16);
+  box-shadow: 0 16px 40px rgba(18, 53, 42, 0.28);
   max-height: 90vh;
   overflow: auto;
   display: flex;
   flex-direction: column;
-  border: 1px solid var(--color-border);
+  border: 1px solid #DDD8CE;
+  opacity: 1;
+  color: #15231C;
 }
 
 .small {
@@ -42,16 +44,17 @@
 
 .header {
   padding: 16px 20px;
-  border-bottom: 1px solid var(--color-border);
+  border-bottom: 1px solid #DDD8CE;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  background-color: #FFFFFF;
 }
 
 .title {
   font-size: 16px;
   font-weight: 600;
-  color: var(--color-text);
+  color: #15231C;
   margin: 0;
 }
 
@@ -59,7 +62,7 @@
   background: none;
   border: none;
   font-size: 20px;
-  color: var(--color-text-muted);
+  color: #5F6B64;
   cursor: pointer;
   padding: 0;
   width: 32px;
@@ -71,21 +74,22 @@
 }
 
 .closeButton:hover {
-  background: var(--color-bg);
-  color: var(--color-text);
+  background: #F3F1EC;
+  color: #15231C;
 }
 
 .content {
   padding: 20px;
   flex: 1;
   overflow: auto;
+  background-color: #FFFFFF;
 }
 
 .footer {
   padding: 14px 20px;
-  border-top: 1px solid var(--color-border);
+  border-top: 1px solid #DDD8CE;
   display: flex;
   justify-content: flex-end;
   gap: 8px;
-  background: var(--color-bg);
+  background-color: #F7F5F0;
 }
