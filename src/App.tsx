@@ -5,7 +5,7 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { store } from './redux/store';
 import { useAppDispatch, useAppSelector } from './redux/hooks';
-import { setUser, setLoading } from './redux/authSlice';
+import { setUser, setLoading, clearUser } from './redux/authSlice';
 import authService from './services/authService';
 import { MainLayout } from './layouts';
 import { ProtectedRoute } from './components/ProtectedRoute/ProtectedRoute';
@@ -58,8 +58,9 @@ const AppContent: React.FC = () => {
     }
   };
 
-  const handleLogout = () => {
-    authService.logout();
+  const handleLogout = async () => {
+    await authService.logout();
+    dispatch(clearUser());
     window.location.href = '/login';
   };
 

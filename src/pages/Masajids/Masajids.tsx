@@ -47,6 +47,7 @@ export const Masajids: React.FC = () => {
     postal_code: '',
     contact_email: '',
     contact_phone: '',
+    ask_imam_enabled: true,
   });
 
   // Members Management Modal
@@ -122,6 +123,7 @@ export const Masajids: React.FC = () => {
       postal_code: '',
       contact_email: '',
       contact_phone: '',
+      ask_imam_enabled: true,
     });
     setShowMasjidModal(true);
   };
@@ -138,6 +140,7 @@ export const Masajids: React.FC = () => {
       postal_code: masjid.postal_code || '',
       contact_email: masjid.contact_email || '',
       contact_phone: masjid.contact_phone || '',
+      ask_imam_enabled: masjid.ask_imam_enabled !== false,
     });
     setShowMasjidModal(true);
   };
@@ -342,6 +345,17 @@ export const Masajids: React.FC = () => {
     { key: 'state', label: 'State', width: '10%' },
     { key: 'country', label: 'Country', width: '10%' },
     {
+      key: 'ask_imam_enabled',
+      label: 'Ask Imam',
+      width: '10%',
+      render: (value) =>
+        value !== false ? (
+          <Badge variant="success">Enabled</Badge>
+        ) : (
+          <Badge variant="error">Disabled</Badge>
+        ),
+    },
+    {
       key: 'is_active',
       label: 'Status',
       width: '10%',
@@ -541,6 +555,24 @@ export const Masajids: React.FC = () => {
             onChange={(value) => setMasjidForm({ ...masjidForm, contact_phone: value })}
             fullWidth
           />
+          <div style={{ gridColumn: '1 / -1' }}>
+            <label style={{ display: 'flex', alignItems: 'flex-start', gap: '12px', cursor: 'pointer' }}>
+              <input
+                type="checkbox"
+                checked={masjidForm.ask_imam_enabled}
+                onChange={(event) =>
+                  setMasjidForm({ ...masjidForm, ask_imam_enabled: event.target.checked })
+                }
+                style={{ width: '18px', height: '18px', marginTop: '2px', accentColor: '#007F5F' }}
+              />
+              <span>
+                <strong>Enable Ask Imam</strong>
+                <div style={{ fontSize: '13px', color: '#666', marginTop: '4px' }}>
+                  Do you want to give users the option to ask the imam for this masjid?
+                </div>
+              </span>
+            </label>
+          </div>
         </div>
       </Modal>
 

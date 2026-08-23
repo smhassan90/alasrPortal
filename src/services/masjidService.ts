@@ -12,6 +12,7 @@ export interface Masjid {
   contact_email?: string;
   contact_phone?: string;
   is_active: boolean;
+  ask_imam_enabled?: boolean;
   created_at: string;
   updated_at: string;
   created_by?: string; // User ID who created the masjid
@@ -33,6 +34,7 @@ export interface CreateMasjidData {
   postal_code?: string;
   contact_email?: string;
   contact_phone?: string;
+  ask_imam_enabled?: boolean;
 }
 
 export interface UpdateMasjidData {
@@ -45,6 +47,7 @@ export interface UpdateMasjidData {
   postal_code?: string;
   contact_email?: string;
   contact_phone?: string;
+  ask_imam_enabled?: boolean;
 }
 
 export interface MasjidStatistics {

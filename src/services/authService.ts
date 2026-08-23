@@ -80,6 +80,8 @@ class AuthService {
   async logout(): Promise<void> {
     try {
       await api.post('/auth/logout');
+    } catch {
+      // Backend may not expose logout; always clear the local session.
     } finally {
       localStorage.removeItem('access_token');
       localStorage.removeItem('refresh_token');
