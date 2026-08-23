@@ -14,6 +14,7 @@ import questionService from '../../services/questionService';
 import type { Question } from '../../services/questionService';
 import { StatsGrid } from '../../layouts';
 import { colors } from '../../theme';
+import { IconCheck, IconClock, IconHelp, IconTrend } from '../../components/Icons';
 
 export const Questions: React.FC = () => {
   const [questions, setQuestions] = useState<Question[]>([]);
@@ -135,25 +136,25 @@ export const Questions: React.FC = () => {
         <StatCard
           title="Total Questions"
           value={stats.total}
-          icon="❓"
+          icon={<IconHelp />}
           color={colors.info}
         />
         <StatCard
           title="Pending Questions"
           value={stats.pending}
-          icon="⏳"
+          icon={<IconClock />}
           color={colors.warning}
         />
         <StatCard
           title="Replied Questions"
           value={stats.replied}
-          icon="✅"
+          icon={<IconCheck />}
           color={colors.success}
         />
         <StatCard
           title="Avg Response Time"
           value="2.5h"
-          icon="⏱️"
+          icon={<IconTrend />}
           color={colors.primary}
         />
       </StatsGrid>
@@ -169,7 +170,6 @@ export const Questions: React.FC = () => {
               placeholder="Search by title, user, or masjid..."
               value={searchTerm}
               onChange={setSearchTerm}
-              icon={<span>🔍</span>}
             />
             <Select
               options={[

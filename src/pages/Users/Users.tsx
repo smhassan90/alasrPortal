@@ -506,7 +506,7 @@ export const Users: React.FC = () => {
         title="Users Management"
         subtitle={`${filteredUsers.length} users found`}
         headerAction={
-          <Button onClick={handleCreateUser} icon={<span>➕</span>}>
+          <Button onClick={handleCreateUser}>
             Create User
           </Button>
         }
@@ -518,7 +518,6 @@ export const Users: React.FC = () => {
               placeholder="Search by name or email..."
               value={searchTerm}
               onChange={setSearchTerm}
-              icon={<span>🔍</span>}
             />
             <Select
               options={[
@@ -798,20 +797,20 @@ export const Users: React.FC = () => {
               borderRadius: '8px',
               border: '1px solid #FFC107',
             }}>
-              <Text size="sm" color="#222222">
-                ⚠️ <strong>Warning:</strong> This action cannot be undone. All user data and their associations with masajids will be permanently deleted.
-              </Text>
+                <Text size="sm" color="#222222">
+                  <strong>Warning:</strong> This cannot be undone. The user and their masjid associations will be permanently deleted.
+                </Text>
             </div>
             <div>
-              <Text size="sm" color="#888888">User Details:</Text>
+              <Text size="sm" color="#888888">User details</Text>
               <div style={{ marginTop: '8px', display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                <Text size="sm">📧 Email: {userToDelete.email}</Text>
-                <Text size="sm">📱 Phone: {userToDelete.phone || 'N/A'}</Text>
+                <Text size="sm">Email: {userToDelete.email}</Text>
+                <Text size="sm">Phone: {userToDelete.phone || 'N/A'}</Text>
                 <Text size="sm">
-                  👤 Role: {userToDelete.is_super_admin ? 'Super Admin' : 'Regular User'}
+                  Role: {userToDelete.is_super_admin ? 'Super Admin' : 'Regular User'}
                 </Text>
                 <Text size="sm">
-                  🟢 Status: {userToDelete.is_active ? 'Active' : 'Inactive'}
+                  Status: {userToDelete.is_active ? 'Active' : 'Inactive'}
                 </Text>
               </div>
             </div>

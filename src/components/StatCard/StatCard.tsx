@@ -19,7 +19,7 @@ export const StatCard: React.FC<StatCardProps> = ({
   value,
   icon,
   trend,
-  color = '#007F5F',
+  color = '#1C6B4A',
   onClick,
   className = '',
 }) => {

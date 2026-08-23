@@ -32,28 +32,26 @@ export const Login: React.FC = () => {
     try {
       const response = await authService.login({ email, password });
       dispatch(setUser(response.data.user));
-      toast.success(`Welcome back, ${response.data.user.name}!`);
+      toast.success(`Welcome back, ${response.data.user.name}.`);
       navigate('/dashboard');
     } catch (err: any) {
-      let errorMessage = 'Failed to login. Please check your credentials.';
-      
-      // Check for API configuration issues
+      let errorMessage = 'Unable to sign in. Please check your details.';
+
       if (err.message?.includes('API Base URL is not configured')) {
         errorMessage = 'API server is not configured. Please contact the administrator.';
       } else if (err.response?.status === 404) {
-        errorMessage = err.response?.data?.message || 'The login endpoint was not found. Please check your API configuration.';
+        errorMessage = err.response?.data?.message || 'The login endpoint was not found.';
       } else if (err.response?.status === 401) {
-        errorMessage = 'Invalid email or password. Please try again.';
+        errorMessage = 'Invalid email or password.';
       } else if (err.response?.data?.message) {
         errorMessage = err.response.data.message;
       } else if (err.message) {
         errorMessage = err.message;
       }
-      
+
       setError(errorMessage);
       toast.error(errorMessage);
-      
-      // Log detailed error in development
+
       if (import.meta.env.DEV) {
         console.error('Login error details:', err);
       }
@@ -64,58 +62,62 @@ export const Login: React.FC = () => {
 
   return (
     <div className={styles.loginPage}>
-      <div className={styles.loginCard}>
-        <div className={styles.logo}>
-          <div className={styles.logoIcon}>🕌</div>
-          <h1 className={styles.brandName}>Al-Asr Portal</h1>
-          <p className={styles.subtitle}>Super Admin Dashboard</p>
+      <aside className={styles.brandPanel}>
+        <div>
+          <p className={styles.kicker}>Al-Asr</p>
+          <h1 className={styles.headline}>Masjid administration, kept simple.</h1>
+          <p className={styles.lede}>
+            Prayer times, questions, and community records in one calm workspace.
+          </p>
         </div>
+      </aside>
 
-        <form className={styles.form} onSubmit={handleSubmit}>
-          {error && <div className={styles.errorMessage}>{error}</div>}
+      <main className={styles.formPanel}>
+        <div className={styles.formWrap}>
+          <h2 className={styles.formTitle}>Sign in</h2>
+          <p className={styles.formHint}>Use your administrator account.</p>
 
-          <Input
-            label="Email"
-            type="email"
-            placeholder="admin@alasr.com"
-            value={email}
-            onChange={setEmail}
-            required
-            fullWidth
-            icon={<span>📧</span>}
-          />
+          <form className={styles.form} onSubmit={handleSubmit}>
+            {error && <div className={styles.errorMessage}>{error}</div>}
 
-          <Input
-            label="Password"
-            type="password"
-            placeholder="Enter your password"
-            value={password}
-            onChange={setPassword}
-            required
-            fullWidth
-            icon={<span>🔒</span>}
-          />
-
-          <label className={styles.rememberMe}>
-            <input
-              type="checkbox"
-              className={styles.checkbox}
-              checked={rememberMe}
-              onChange={(e) => setRememberMe(e.target.checked)}
+            <Input
+              label="Email"
+              type="email"
+              placeholder="admin@alasr.com"
+              value={email}
+              onChange={setEmail}
+              required
+              fullWidth
             />
-            Remember me
-          </label>
 
-          <Button type="submit" fullWidth loading={loading} size="large">
-            Login
-          </Button>
-        </form>
+            <Input
+              label="Password"
+              type="password"
+              placeholder="Enter your password"
+              value={password}
+              onChange={setPassword}
+              required
+              fullWidth
+            />
 
-        <div className={styles.footer}>
-          © 2025 Al-Asr Portal. All rights reserved.
+            <label className={styles.rememberMe}>
+              <input
+                type="checkbox"
+                className={styles.checkbox}
+                checked={rememberMe}
+                onChange={(e) => setRememberMe(e.target.checked)}
+              />
+              Keep me signed in
+            </label>
+
+            <Button type="submit" fullWidth loading={loading} size="large">
+              Continue
+            </Button>
+          </form>
+
+          <p className={styles.footer}>Al-Asr Portal</p>
         </div>
-      </div>
+      </main>
     </div>
   );
 };
-

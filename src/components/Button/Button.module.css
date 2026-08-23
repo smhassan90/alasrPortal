@@ -3,25 +3,17 @@
   align-items: center;
   justify-content: center;
   gap: 8px;
-  border: none;
-  border-radius: 10px;
-  font-family: 'Poppins', sans-serif;
-  font-weight: 600;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  font-weight: 500;
   cursor: pointer;
-  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
   outline: none;
   text-decoration: none;
-  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .button:hover:not(:disabled) {
-  transform: translateY(-2px);
-  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.15);
-}
-
-.button:active:not(:disabled) {
-  transform: translateY(0);
-  box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.12);
+  filter: none;
 }
 
 .button:disabled {
@@ -29,54 +21,63 @@
   cursor: not-allowed;
 }
 
-/* Variants */
 .primary {
-  background-color: #007F5F;
+  background-color: var(--color-primary);
   color: #FFFFFF;
 }
 
+.primary:hover:not(:disabled) {
+  background-color: var(--color-primary-hover);
+}
+
 .secondary {
-  background-color: #FFD700;
-  color: #222222;
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  border-color: var(--color-border);
+}
+
+.secondary:hover:not(:disabled) {
+  background-color: #E8ECEA;
 }
 
 .outline {
   background-color: transparent;
-  border: 2px solid #007F5F;
-  color: #007F5F;
-  box-shadow: none;
+  border-color: var(--color-border);
+  color: var(--color-text);
 }
 
 .outline:hover:not(:disabled) {
-  background-color: rgba(0, 127, 95, 0.05);
-  border-color: #005A43;
-  color: #005A43;
+  background-color: var(--color-bg);
+  border-color: #C5D0CB;
 }
 
 .danger {
-  background-color: #DC3545;
+  background-color: var(--color-danger);
   color: #FFFFFF;
+}
+
+.danger:hover:not(:disabled) {
+  background-color: #9B1C14;
 }
 
 .success {
-  background-color: #28A745;
+  background-color: var(--color-success);
   color: #FFFFFF;
 }
 
-/* Sizes */
 .small {
-  padding: 8px 16px;
-  font-size: 14px;
+  padding: 6px 12px;
+  font-size: 13px;
 }
 
 .medium {
-  padding: 16px 24px;
-  font-size: 16px;
+  padding: 8px 14px;
+  font-size: 14px;
 }
 
 .large {
-  padding: 24px 32px;
-  font-size: 18px;
+  padding: 11px 18px;
+  font-size: 14px;
 }
 
 .fullWidth {
@@ -89,8 +90,17 @@
 }
 
 .spinner {
-  width: 16px;
-  height: 16px;
+  width: 14px;
+  height: 14px;
+  border: 2px solid currentColor;
+  border-right-color: transparent;
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+}
+
+.spinner {
+  width: 14px;
+  height: 14px;
   border: 2px solid currentColor;
   border-right-color: transparent;
   border-radius: 50%;
@@ -102,4 +112,3 @@
     transform: rotate(360deg);
   }
 }
-

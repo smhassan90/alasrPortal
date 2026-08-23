@@ -1,15 +1,16 @@
 .layout {
   display: flex;
   min-height: 100vh;
-  background: #F5F5F5;
+  background: var(--color-bg);
 }
 
 .main {
   flex: 1;
-  margin-left: 280px;
+  margin-left: 248px;
   display: flex;
   flex-direction: column;
-  transition: margin-left 0.3s ease;
+  min-width: 0;
+  transition: margin-left 0.2s ease;
 }
 
 .main.fullWidth {
@@ -19,12 +20,15 @@
 .content {
   flex: 1;
   padding: 24px;
-  min-height: calc(100vh - 70px);
+  min-height: calc(100vh - 64px);
 }
 
 @media (max-width: 768px) {
   .main {
     margin-left: 0;
   }
-}
 
+  .content {
+    padding: 16px;
+  }
+}

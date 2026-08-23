@@ -48,6 +48,7 @@ export const Masajids: React.FC = () => {
     contact_email: '',
     contact_phone: '',
     ask_imam_enabled: true,
+    asr_fiqh: 'hanafi' as 'hanafi' | 'shafai',
   });
 
   // Members Management Modal
@@ -124,6 +125,7 @@ export const Masajids: React.FC = () => {
       contact_email: '',
       contact_phone: '',
       ask_imam_enabled: true,
+      asr_fiqh: 'hanafi',
     });
     setShowMasjidModal(true);
   };
@@ -140,7 +142,11 @@ export const Masajids: React.FC = () => {
       postal_code: masjid.postal_code || '',
       contact_email: masjid.contact_email || '',
       contact_phone: masjid.contact_phone || '',
-      ask_imam_enabled: masjid.ask_imam_enabled !== false,
+      ask_imam_enabled:
+        masjid.ask_imam_enabled !== false &&
+        masjid.ask_imam_enabled !== 0 &&
+        masjid.ask_imam_enabled !== '0',
+      asr_fiqh: masjid.asr_fiqh === 'shafai' ? 'shafai' : 'hanafi',
     });
     setShowMasjidModal(true);
   };
@@ -349,10 +355,21 @@ export const Masajids: React.FC = () => {
       label: 'Ask Imam',
       width: '10%',
       render: (value) =>
-        value !== false ? (
+        value !== false && value !== 0 && value !== '0' ? (
           <Badge variant="success">Enabled</Badge>
         ) : (
           <Badge variant="error">Disabled</Badge>
+        ),
+    },
+    {
+      key: 'asr_fiqh',
+      label: 'Zuhr Fiqh',
+      width: '12%',
+      render: (value) =>
+        value === 'shafai' ? (
+          <Badge variant="info">Shafai</Badge>
+        ) : (
+          <Badge variant="success">Hanafi</Badge>
         ),
     },
     {
@@ -555,6 +572,26 @@ export const Masajids: React.FC = () => {
             onChange={(value) => setMasjidForm({ ...masjidForm, contact_phone: value })}
             fullWidth
           />
+          <div style={{ gridColumn: '1 / -1' }}>
+            <Select
+              label="Zuhr / Jummah Fiqh"
+              value={masjidForm.asr_fiqh}
+              onChange={(value) =>
+                setMasjidForm({
+                  ...masjidForm,
+                  asr_fiqh: value === 'shafai' ? 'shafai' : 'hanafi',
+                })
+              }
+              options={[
+                { value: 'hanafi', label: 'Imam Abu Hanifa (Hanafi)' },
+                { value: 'shafai', label: "Imam Shafi'i (Shafai)" },
+              ]}
+              fullWidth
+            />
+            <div style={{ fontSize: '13px', color: '#666', marginTop: '4px' }}>
+              This sets when Zuhr and Jummah end. Hanafi Asr starts later than Shafai.
+            </div>
+          </div>
           <div style={{ gridColumn: '1 / -1' }}>
             <label style={{ display: 'flex', alignItems: 'flex-start', gap: '12px', cursor: 'pointer' }}>
               <input

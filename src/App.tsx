@@ -18,8 +18,20 @@ import {
   Analytics,
   Settings,
   AppConfig,
+  Logs,
 } from './pages';
 import './App.css';
+import {
+  IconChart,
+  IconGrid,
+  IconHelp,
+  IconList,
+  IconLogout,
+  IconMosque,
+  IconSettings,
+  IconSliders,
+  IconUsers,
+} from './components/Icons';
 
 const AppContent: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -65,14 +77,15 @@ const AppContent: React.FC = () => {
   };
 
   const menuItems = [
-    { label: 'Dashboard', icon: '📊', path: '/dashboard' },
-    { label: 'Users', icon: '👥', path: '/users' },
-    { label: 'Masajids', icon: '🕌', path: '/masajids' },
-    { label: 'Questions', icon: '❓', path: '/questions', badge: pendingQuestionsCount || undefined },
-    { label: 'Analytics', icon: '📈', path: '/analytics' },
-    { label: 'Settings', icon: '⚙️', path: '/settings' },
-    { label: 'App Config', icon: '🔧', path: '/admin/config/app' },
-    { label: 'Logout', icon: '🚪', path: '', onClick: handleLogout },
+    { label: 'Dashboard', icon: <IconGrid />, path: '/dashboard' },
+    { label: 'Users', icon: <IconUsers />, path: '/users' },
+    { label: 'Masajids', icon: <IconMosque />, path: '/masajids' },
+    { label: 'Questions', icon: <IconHelp />, path: '/questions', badge: pendingQuestionsCount || undefined },
+    { label: 'Activity Logs', icon: <IconList />, path: '/logs' },
+    { label: 'Analytics', icon: <IconChart />, path: '/analytics' },
+    { label: 'Settings', icon: <IconSettings />, path: '/settings' },
+    { label: 'App Config', icon: <IconSliders />, path: '/admin/config/app' },
+    { label: 'Sign out', icon: <IconLogout />, path: '', onClick: handleLogout, footer: true },
   ];
 
   if (loading) {
@@ -82,8 +95,9 @@ const AppContent: React.FC = () => {
         alignItems: 'center',
         justifyContent: 'center',
         height: '100vh',
-        fontSize: '24px',
-        color: '#007F5F',
+        fontFamily: "'Source Serif 4', Georgia, serif",
+        fontSize: '22px',
+        color: '#12352A',
       }}>
         Loading...
       </div>
@@ -112,6 +126,7 @@ const AppContent: React.FC = () => {
           <Route path="users" element={<Users />} />
           <Route path="masajids" element={<Masajids />} />
           <Route path="questions" element={<Questions />} />
+          <Route path="logs" element={<Logs />} />
           <Route path="analytics" element={<Analytics />} />
           <Route path="settings" element={<Settings />} />
           <Route path="admin/config/app" element={<AppConfig />} />

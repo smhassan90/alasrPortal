@@ -8,6 +8,7 @@ import { LineChart, Line, BarChart, Bar, AreaChart, Area, XAxis, YAxis, Cartesia
 import { toast } from 'react-toastify';
 import masjidService from '../../services/masjidService';
 import userService from '../../services/userService';
+import { IconChart, IconMosque, IconTrend, IconUsers } from '../../components/Icons';
 
 export const Analytics: React.FC = () => {
   const [, setLoading] = useState(true);
@@ -199,13 +200,13 @@ export const Analytics: React.FC = () => {
         headerAction={
           <div style={{ display: 'flex', gap: '8px' }}>
             <Button variant="outline" size="small" onClick={handleExportPDF}>
-              📄 PDF
+              PDF
             </Button>
             <Button variant="outline" size="small" onClick={handleExportExcel}>
-              📊 Excel
+              Excel
             </Button>
             <Button variant="outline" size="small" onClick={handleExportCSV}>
-              📋 CSV
+              CSV
             </Button>
           </div>
         }
@@ -217,25 +218,25 @@ export const Analytics: React.FC = () => {
         <StatCard
           title="Total Masajids"
           value={totalMasajids}
-          icon="🕌"
+          icon={<IconMosque />}
           color={colors.primary}
         />
         <StatCard
           title="Total Users"
           value={totalUsers}
-          icon="👥"
+          icon={<IconUsers />}
           color={colors.info}
         />
         <StatCard
           title="Total Questions"
           value={totalQuestions}
-          icon="❓"
+          icon={<IconChart />}
           color={colors.secondary}
         />
         <StatCard
           title="Growth Rate"
           value={growthRate}
-          icon="📈"
+          icon={<IconTrend />}
           color={colors.success}
         />
       </StatsGrid>

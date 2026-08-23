@@ -1,5 +1,6 @@
 import React from 'react';
 import styles from './Header.module.css';
+import { IconBell, IconMenu } from '../Icons';
 
 export interface HeaderProps {
   title: string;
@@ -37,15 +38,19 @@ export const Header: React.FC<HeaderProps> = ({
     <header className={headerClasses}>
       <div className={styles.left}>
         {onMenuClick && (
-          <button className={styles.menuButton} onClick={onMenuClick}>
-            ☰
+          <button className={styles.menuButton} onClick={onMenuClick} aria-label="Toggle menu">
+            <IconMenu />
           </button>
         )}
         <h1 className={styles.title}>{title}</h1>
       </div>
       <div className={styles.right}>
-        <button className={styles.notificationButton} onClick={onNotificationClick}>
-          🔔
+        <button
+          className={styles.notificationButton}
+          onClick={onNotificationClick}
+          aria-label="Notifications"
+        >
+          <IconBell />
           {notifications > 0 && <span className={styles.notificationBadge} />}
         </button>
         <div className={styles.userInfo} onClick={onUserClick}>
@@ -60,4 +65,3 @@ export const Header: React.FC<HeaderProps> = ({
     </header>
   );
 };
-

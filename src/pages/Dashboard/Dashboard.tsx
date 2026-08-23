@@ -12,6 +12,11 @@ import { colors } from '../../theme';
 import { toast } from 'react-toastify';
 import masjidService from '../../services/masjidService';
 import userService from '../../services/userService';
+import activityLogService, {
+  actionLabel,
+  formatRelativeTime,
+} from '../../services/activityLogService';
+import { IconClock, IconHelp, IconMosque, IconUser, IconUsers } from '../../components/Icons';
 
 interface MonthlyData {
   month: string;
@@ -63,10 +68,11 @@ export const Dashboard: React.FC = () => {
       setLoading(true);
       const questionService = (await import('../../services/questionService')).default;
       
-      const [masajids, users, questions] = await Promise.all([
+      const [masajids, users, questions, activityLogs] = await Promise.all([
         masjidService.getAllMasajids(),
         userService.getAllUsers(),
         questionService.getAllQuestions(true).catch(() => []), // Use cache to avoid rate limiting
+        activityLogService.getAllLogs({ page: 1, limit: 8 }).catch(() => []),
       ]);
 
       console.log('📊 Dashboard Data Loaded:');
@@ -99,8 +105,15 @@ export const Dashboard: React.FC = () => {
       const userDist = calculateUserDistribution(users);
       setUserDistributionData(userDist);
 
-      // Recent activities will be empty until backend provides activity log API
-      setRecentActivitiesData([]);
+      setRecentActivitiesData(
+        activityLogs.map((log) => ({
+          id: log.id,
+          user: log.user?.name || 'Unknown',
+          action: actionLabel(log.action),
+          target: log.masjid?.name || log.message,
+          time: formatRelativeTime(log.created_at),
+        })),
+      );
 
     } catch (error: any) {
       console.error('❌ Dashboard load error:', error);
@@ -224,35 +237,35 @@ export const Dashboard: React.FC = () => {
         <StatCard
           title="Total Masajids"
           value={stats.totalMasajids}
-          icon="🕌"
+          icon={<IconMosque />}
           color={colors.primary}
           onClick={() => navigate('/masajids')}
         />
         <StatCard
           title="Total Users"
           value={stats.totalUsers}
-          icon="👥"
+          icon={<IconUsers />}
           color={colors.info}
           onClick={() => navigate('/users')}
         />
         <StatCard
           title="Total Questions"
           value={stats.totalQuestions}
-          icon="❓"
+          icon={<IconHelp />}
           color={colors.secondary}
           onClick={() => navigate('/questions')}
         />
         <StatCard
           title="Pending Questions"
           value={stats.pendingQuestions}
-          icon="⏳"
+          icon={<IconClock />}
           color={colors.warning}
           onClick={() => navigate('/questions')}
         />
         <StatCard
           title="Masjid Creators"
           value={stats.uniqueMasjidCreators}
-          icon="👤"
+          icon={<IconUser />}
           color={colors.success}
           onClick={() => navigate('/masajids')}
         />
@@ -278,7 +291,7 @@ export const Dashboard: React.FC = () => {
                 type="monotone"
                 dataKey="count"
                 stroke={colors.primary}
-                strokeWidth={3}
+                strokeWidth={2}
                 name="Masajids"
                 dot={{ fill: colors.primary, r: 5 }}
               />

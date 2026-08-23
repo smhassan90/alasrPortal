@@ -1,42 +1,30 @@
 export const colors = {
-  // Primary colors
-  primary: '#007F5F',
-  secondary: '#FFD700',
+  primary: '#1C6B4A',
+  secondary: '#1D5A73',
 
-  // Background colors
-  background: '#FFFFFF',
-  backgroundLight: '#F5F5F5',
+  background: '#FFFcf8',
+  backgroundLight: '#F3F1EC',
 
-  // Text colors
-  text: '#222222',
-  textDark: '#222222',
-  textLight: '#888888',
+  text: '#15231C',
+  textDark: '#15231C',
+  textLight: '#5F6B64',
   textWhite: '#FFFFFF',
 
-  // Basic colors
   white: '#FFFFFF',
-  black: '#000000',
+  black: '#12352A',
 
-  // Gray scale
-  grayLight: '#F5F5F5',
-  grayMedium: '#CCCCCC',
-  grayDark: '#666666',
+  grayLight: '#F3F1EC',
+  grayMedium: '#DDD8CE',
+  grayDark: '#5F6B64',
 
-  // Status colors
-  success: '#28A745',
-  error: '#DC3545',
-  warning: '#FFC107',
-  info: '#17A2B8',
+  success: '#067647',
+  error: '#B42318',
+  warning: '#B54708',
+  info: '#1D5A73',
 
-  // Border colors
-  border: '#E0E0E0',
-
-  // Transparent
+  border: '#DDD8CE',
   transparent: 'transparent',
-
-  // Shadow
-  shadow: '#000000',
+  shadow: '#12352A',
 };
 
 export type ColorKeys = keyof typeof colors;
-

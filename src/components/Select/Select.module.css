@@ -9,51 +9,48 @@
 }
 
 .label {
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 500;
-  color: #222222;
-  margin-bottom: 8px;
-  font-family: 'Poppins', sans-serif;
+  color: var(--color-text);
+  margin-bottom: 6px;
 }
 
 .required {
-  color: #DC3545;
-  margin-left: 4px;
+  color: var(--color-danger);
+  margin-left: 2px;
 }
 
 .select {
   width: 100%;
-  padding: 16px;
-  border: 2px solid #E0E0E0;
-  border-radius: 12px;
-  font-size: 16px;
-  font-family: 'Poppins', sans-serif;
-  background: #FFFFFF;
-  transition: all 0.2s ease;
+  padding: 9px 12px;
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  font-size: 14px;
+  background: var(--color-surface);
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
   outline: none;
   cursor: pointer;
   box-sizing: border-box;
+  color: var(--color-text);
 }
 
 .select:focus {
-  border-color: #007F5F;
-  box-shadow: 0 0 0 3px rgba(0, 127, 95, 0.1);
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(31, 107, 74, 0.12);
 }
 
 .select.error {
-  border-color: #DC3545;
+  border-color: var(--color-danger);
 }
 
 .select:disabled {
-  background: #F5F5F5;
+  background: var(--color-bg);
   cursor: not-allowed;
-  opacity: 0.6;
+  opacity: 0.7;
 }
 
 .errorMessage {
   font-size: 12px;
-  color: #DC3545;
+  color: var(--color-danger);
   margin-top: 4px;
-  font-family: 'Poppins', sans-serif;
 }
-

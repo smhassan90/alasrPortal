@@ -1,132 +1,123 @@
 .header {
-  height: 72px;
-  background: #FFFFFF;
-  border-bottom: 1px solid #E0E0E0;
-  box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.06);
-  padding: 0 28px;
+  height: 60px;
+  background: var(--color-surface);
+  border-bottom: 1px solid var(--color-border);
+  padding: 0 24px;
   display: flex;
   justify-content: space-between;
   align-items: center;
   position: sticky;
   top: 0;
   z-index: 99;
-  backdrop-filter: blur(10px);
-  background: rgba(255, 255, 255, 0.95);
 }
 
 .left {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 12px;
 }
 
 .menuButton {
-  width: 42px;
-  height: 42px;
-  border-radius: 10px;
+  width: 36px;
+  height: 36px;
+  border-radius: 6px;
   border: none;
   background: none;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 24px;
-  color: #222222;
-  transition: all 0.25s ease;
+  color: var(--color-text);
+  transition: background 0.15s ease;
 }
 
 .menuButton:hover {
-  background: #F5F5F5;
-  transform: scale(1.05);
+  background: var(--color-bg);
 }
 
 .title {
-  font-size: 20px;
+  font-family: var(--font-serif);
+  font-size: 18px;
   font-weight: 600;
-  color: #222222;
-  font-family: 'Poppins', sans-serif;
+  color: var(--color-text);
   margin: 0;
 }
 
 .right {
   display: flex;
   align-items: center;
-  gap: 24px;
+  gap: 12px;
 }
 
 .notificationButton {
-  width: 42px;
-  height: 42px;
-  border-radius: 10px;
+  width: 36px;
+  height: 36px;
+  border-radius: 6px;
   border: none;
   background: none;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 24px;
-  color: #222222;
-  transition: all 0.25s ease;
+  color: var(--color-text-muted);
+  transition: background 0.15s ease;
   position: relative;
 }
 
 .notificationButton:hover {
-  background: #F5F5F5;
-  transform: scale(1.05);
+  background: var(--color-bg);
+  color: var(--color-text);
 }
 
 .notificationBadge {
   position: absolute;
-  top: 6px;
-  right: 6px;
-  width: 8px;
-  height: 8px;
-  background: #DC3545;
+  top: 8px;
+  right: 8px;
+  width: 7px;
+  height: 7px;
+  background: var(--color-danger);
   border-radius: 50%;
-  border: 2px solid #FFFFFF;
+  border: 2px solid var(--color-surface);
 }
 
 .userInfo {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
   cursor: pointer;
-  padding: 8px;
-  border-radius: 8px;
-  transition: background 0.2s;
+  padding: 4px 8px 4px 4px;
+  border-radius: 6px;
+  transition: background 0.15s ease;
 }
 
 .userInfo:hover {
-  background: #F5F5F5;
+  background: var(--color-bg);
 }
 
 .avatar {
-  width: 40px;
-  height: 40px;
+  width: 32px;
+  height: 32px;
   border-radius: 50%;
-  border: 2px solid #E0E0E0;
   object-fit: cover;
 }
 
 .avatarPlaceholder {
-  width: 40px;
-  height: 40px;
+  width: 32px;
+  height: 32px;
   border-radius: 50%;
-  background: #007F5F;
-  color: #FFFFFF;
+  background: var(--color-primary-soft);
+  color: var(--color-primary);
   display: flex;
   align-items: center;
   justify-content: center;
   font-weight: 600;
-  font-size: 16px;
-  font-family: 'Poppins', sans-serif;
+  font-size: 12px;
 }
 
 .userName {
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 500;
-  color: #222222;
-  font-family: 'Poppins', sans-serif;
+  color: var(--color-text);
 }
 
 @media (max-width: 768px) {
@@ -135,7 +126,6 @@
   }
 
   .title {
-    font-size: 18px;
+    font-size: 15px;
   }
 }
-

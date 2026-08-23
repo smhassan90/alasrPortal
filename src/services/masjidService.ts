@@ -13,6 +13,7 @@ export interface Masjid {
   contact_phone?: string;
   is_active: boolean;
   ask_imam_enabled?: boolean;
+  asr_fiqh?: 'hanafi' | 'shafai';
   created_at: string;
   updated_at: string;
   created_by?: string; // User ID who created the masjid
@@ -35,6 +36,7 @@ export interface CreateMasjidData {
   contact_email?: string;
   contact_phone?: string;
   ask_imam_enabled?: boolean;
+  asr_fiqh?: 'hanafi' | 'shafai';
 }
 
 export interface UpdateMasjidData {
@@ -48,6 +50,7 @@ export interface UpdateMasjidData {
   contact_email?: string;
   contact_phone?: string;
   ask_imam_enabled?: boolean;
+  asr_fiqh?: 'hanafi' | 'shafai';
 }
 
 export interface MasjidStatistics {

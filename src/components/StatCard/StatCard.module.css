@@ -1,26 +1,13 @@
 .statCard {
   display: flex;
   align-items: center;
-  gap: 20px;
-  padding: 28px;
-  background: #FFFFFF;
-  border: 1px solid #E0E0E0;
-  border-radius: 16px;
-  box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.06);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  gap: 16px;
+  padding: 18px 20px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  transition: border-color 0.15s ease;
   position: relative;
-  overflow: hidden;
-}
-
-.statCard::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 4px;
-  height: 100%;
-  background: transparent;
-  transition: background 0.3s ease;
 }
 
 .statCard.clickable {
@@ -28,32 +15,24 @@
 }
 
 .statCard.clickable:hover {
-  box-shadow: 0px 8px 24px rgba(0, 0, 0, 0.12);
-  transform: translateY(-4px);
-  border-color: #007F5F;
-}
-
-.statCard.clickable:hover::before {
-  background: #007F5F;
+  border-color: #C5D0CB;
 }
 
 .iconContainer {
-  width: 72px;
-  height: 72px;
-  border-radius: 14px;
+  width: 44px;
+  height: 44px;
+  border-radius: 8px;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  transition: transform 0.3s ease;
-}
-
-.statCard.clickable:hover .iconContainer {
-  transform: scale(1.1) rotate(5deg);
 }
 
 .icon {
-  font-size: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: inherit;
 }
 
 .content {
@@ -62,40 +41,36 @@
 }
 
 .title {
-  font-size: 14px;
-  color: #888888;
-  margin: 0 0 8px 0;
-  font-family: 'Poppins', sans-serif;
+  font-size: 12px;
+  color: var(--color-text-muted);
+  margin: 0 0 4px 0;
+  font-weight: 500;
 }
 
 .value {
-  font-size: 36px;
-  font-weight: 700;
-  color: #222222;
+  font-size: 24px;
+  font-weight: 600;
+  color: var(--color-text);
   margin: 0;
-  font-family: 'Poppins', sans-serif;
-  line-height: 1.1;
-  letter-spacing: -0.02em;
+  line-height: 1.15;
 }
 
 .trend {
   font-size: 12px;
-  margin-top: 8px;
-  font-family: 'Poppins', sans-serif;
+  margin-top: 6px;
   display: flex;
   align-items: center;
   gap: 4px;
 }
 
 .trend.positive {
-  color: #28A745;
+  color: var(--color-success);
 }
 
 .trend.negative {
-  color: #DC3545;
+  color: var(--color-danger);
 }
 
 .trendIcon {
-  font-size: 14px;
+  font-size: 12px;
 }
-
