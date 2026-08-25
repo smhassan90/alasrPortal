@@ -3,11 +3,24 @@ import api from './api';
 export type ActivityLogAction =
   | 'prayer_time_updated'
   | 'event_created'
-  | 'question_answered';
+  | 'question_answered'
+  | 'user_created'
+  | 'user_updated'
+  | 'user_deleted'
+  | 'user_promoted'
+  | 'user_demoted'
+  | 'user_activated'
+  | 'user_deactivated'
+  | 'member_added'
+  | 'member_removed'
+  | 'member_role_updated'
+  | 'masjid_created'
+  | 'masjid_updated'
+  | 'masjid_deactivated';
 
 export interface ActivityLog {
   id: string;
-  masjid_id: string;
+  masjid_id?: string | null;
   user_id?: string | null;
   action: ActivityLogAction | string;
   message: string;
@@ -47,17 +60,27 @@ export const formatRelativeTime = (dateString?: string): string => {
   return days === 1 ? 'Yesterday' : `${days}d ago`;
 };
 
+const ACTION_LABELS: Record<string, string> = {
+  prayer_time_updated: 'Prayer time',
+  event_created: 'Event',
+  question_answered: 'Question',
+  user_created: 'Created user',
+  user_updated: 'Updated user',
+  user_deleted: 'Deleted user',
+  user_promoted: 'Promoted',
+  user_demoted: 'Demoted',
+  user_activated: 'Activated user',
+  user_deactivated: 'Deactivated user',
+  member_added: 'Added member',
+  member_removed: 'Removed member',
+  member_role_updated: 'Updated role',
+  masjid_created: 'Created masjid',
+  masjid_updated: 'Updated masjid',
+  masjid_deactivated: 'Deactivated masjid',
+};
+
 export const actionLabel = (action: string): string => {
-  if (action === 'prayer_time_updated') {
-    return 'Prayer time';
-  }
-  if (action === 'event_created') {
-    return 'Event';
-  }
-  if (action === 'question_answered') {
-    return 'Question';
-  }
-  return action.replace(/_/g, ' ');
+  return ACTION_LABELS[action] || action.replace(/_/g, ' ');
 };
 
 class ActivityLogService {

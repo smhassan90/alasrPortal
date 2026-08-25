@@ -47,7 +47,7 @@ export const Logs: React.FC = () => {
     },
     {
       key: 'user',
-      label: 'User',
+      label: 'Done by',
       width: '16%',
       render: (_value, row) => row.user?.name || 'Unknown',
     },
@@ -77,7 +77,7 @@ export const Logs: React.FC = () => {
   return (
     <Card
       title="Activity Logs"
-      subtitle="Last 7 days across all masajids"
+      subtitle="Last 7 days of portal and masjid activity"
       padding="none"
     >
       <Table

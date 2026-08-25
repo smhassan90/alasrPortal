@@ -110,7 +110,7 @@ export const Dashboard: React.FC = () => {
           id: log.id,
           user: log.user?.name || 'Unknown',
           action: actionLabel(log.action),
-          target: log.masjid?.name || log.message,
+          target: log.message || log.masjid?.name || '—',
           time: formatRelativeTime(log.created_at),
         })),
       );
@@ -215,14 +215,14 @@ export const Dashboard: React.FC = () => {
   };
 
   const activityColumns: TableColumn[] = [
-    { key: 'user', label: 'User', width: '25%' },
+    { key: 'user', label: 'Done by', width: '20%' },
     {
       key: 'action',
       label: 'Action',
-      width: '20%',
+      width: '18%',
       render: (value) => <Badge variant="info" size="small">{value}</Badge>,
     },
-    { key: 'target', label: 'Target', width: '30%' },
+    { key: 'target', label: 'Details', width: '37%' },
     {
       key: 'time',
       label: 'Time',
