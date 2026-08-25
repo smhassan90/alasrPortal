@@ -4,10 +4,21 @@
   border-radius: var(--radius);
   overflow: hidden;
   position: relative;
+  max-width: 100%;
+}
+
+.scroll {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-x: contain;
 }
 
 .table {
   width: 100%;
+  min-width: 720px;
   border-collapse: collapse;
 }
 
@@ -24,6 +35,7 @@
   text-align: left;
   text-transform: none;
   letter-spacing: 0;
+  white-space: nowrap;
 }
 
 .th.center {
@@ -55,6 +67,7 @@
   font-size: 13.5px;
   color: var(--color-text);
   line-height: 1.45;
+  white-space: nowrap;
 }
 
 .td.center {

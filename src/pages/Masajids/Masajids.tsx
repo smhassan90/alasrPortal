@@ -610,7 +610,7 @@ export const Masajids: React.FC = () => {
         padding="none"
       >
         <div style={{ padding: '24px', borderBottom: '1px solid #E0E0E0' }}>
-          <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '16px' }}>
+          <div className="filterBarTwo">
             <Input
               placeholder="Search by name, city or area..."
               value={searchTerm}

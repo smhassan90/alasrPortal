@@ -48,7 +48,7 @@ export const Card: React.FC<CardProps> = ({
             {title && <h3 className={styles.title}>{title}</h3>}
             {subtitle && <p className={styles.subtitle}>{subtitle}</p>}
           </div>
-          {headerAction && <div>{headerAction}</div>}
+          {headerAction && <div className={styles.headerAction}>{headerAction}</div>}
         </div>
       )}
       <div className={contentClasses}>{children}</div>

@@ -113,3 +113,22 @@ a {
   background: var(--color-warning-soft);
   color: var(--color-text);
 }
+
+.filterBar {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(0, 1fr) minmax(0, 1fr);
+  gap: 16px;
+}
+
+.filterBarTwo {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+  gap: 16px;
+}
+
+@media (max-width: 768px) {
+  .filterBar,
+  .filterBarTwo {
+    grid-template-columns: 1fr;
+  }
+}

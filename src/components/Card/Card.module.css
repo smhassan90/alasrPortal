@@ -3,6 +3,8 @@
   border: 1px solid var(--color-border);
   border-radius: var(--radius);
   box-shadow: none;
+  max-width: 100%;
+  min-width: 0;
 }
 
 .card.hoverable {
@@ -19,7 +21,23 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
   background: var(--color-surface);
+}
+
+.headerAction {
+  flex-shrink: 0;
+}
+
+@media (max-width: 768px) {
+  .header {
+    align-items: flex-start;
+  }
+
+  .headerAction {
+    width: 100%;
+  }
 }
 
 .title {
@@ -39,6 +57,8 @@
 
 .content {
   padding: 16px 20px;
+  min-width: 0;
+  max-width: 100%;
 }
 
 .content.noPadding {

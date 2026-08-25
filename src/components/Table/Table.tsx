@@ -33,6 +33,7 @@ export const Table: React.FC<TableProps> = ({
 
   return (
     <div className={containerClasses}>
+      <div className={styles.scroll}>
       <table className={styles.table}>
         <thead className={styles.thead}>
           <tr>
@@ -66,6 +67,7 @@ export const Table: React.FC<TableProps> = ({
           ))}
         </tbody>
       </table>
+      </div>
 
       {loading && (
         <div className={styles.loading}>
