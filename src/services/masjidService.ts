@@ -15,6 +15,7 @@ export interface Masjid {
   is_active: boolean;
   ask_imam_enabled?: boolean;
   asr_fiqh?: 'hanafi' | 'shafai';
+  home_users_count?: number;
   created_at: string;
   updated_at: string;
   created_by?: string; // User ID who created the masjid

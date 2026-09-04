@@ -484,8 +484,16 @@ export const Masajids: React.FC = () => {
   });
 
   const columns: TableColumn[] = [
-    { key: 'name', label: 'Masjid Name', width: '20%' },
-    { key: 'area', label: 'Area', width: '12%' },
+    { key: 'name', label: 'Masjid Name', width: '18%' },
+    {
+      key: 'home_users_count',
+      label: 'Home Users',
+      width: '10%',
+      render: (value) => (
+        <Badge variant="info">{Number(value) || 0}</Badge>
+      ),
+    },
+    { key: 'area', label: 'Area', width: '10%' },
     { key: 'city', label: 'City', width: '12%' },
     { key: 'state', label: 'State', width: '10%' },
     { key: 'country', label: 'Country', width: '10%' },
