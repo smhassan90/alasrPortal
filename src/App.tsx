@@ -62,7 +62,7 @@ const AppContent: React.FC = () => {
     try {
       const questionService = (await import('./services/questionService')).default;
       const questions = await questionService.getAllQuestions(true); // Use cache
-      const pendingCount = questions.filter(q => q.status === 'New').length;
+      const pendingCount = questions.filter(q => q.status === 'new').length;
       setPendingQuestionsCount(pendingCount);
     } catch (error) {
       // Silently fail - badge will show previous count

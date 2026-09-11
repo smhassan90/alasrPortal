@@ -80,7 +80,7 @@ export const Dashboard: React.FC = () => {
       console.log('  - Users:', users.length, users);
       console.log('  - Questions:', questions.length, questions);
 
-      const pendingCount = questions.filter(q => q.status === 'New').length;
+      const pendingCount = questions.filter(q => q.status === 'new').length;
 
       // Calculate unique masjid creators
       const uniqueCreators = calculateUniqueMasjidCreators(masajids);
@@ -159,14 +159,14 @@ export const Dashboard: React.FC = () => {
     
     // Count questions by month and status
     questions.forEach(question => {
-      if (question.submitted_at) {
-        const date = new Date(question.submitted_at);
+      if (question.created_at) {
+        const date = new Date(question.created_at);
         const monthIndex = date.getMonth();
         const month = months[monthIndex];
         
-        if (question.status === 'New') {
+        if (question.status === 'new') {
           monthData[month].new++;
-        } else if (question.status === 'Replied') {
+        } else if (question.status === 'replied') {
           monthData[month].replied++;
         }
       }

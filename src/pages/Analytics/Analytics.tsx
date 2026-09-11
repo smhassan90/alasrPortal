@@ -132,7 +132,7 @@ export const Analytics: React.FC = () => {
       
       const masjidsCount = masajids.filter(m => new Date(m.created_at) <= monthEndDate).length;
       const usersCount = users.filter(u => new Date(u.created_at) <= monthEndDate).length;
-      const questionsCount = questions.filter(q => new Date(q.submitted_at) <= monthEndDate).length;
+      const questionsCount = questions.filter(q => new Date(q.created_at) <= monthEndDate).length;
       
       result.push({
         month,
@@ -150,7 +150,7 @@ export const Analytics: React.FC = () => {
     today.setHours(0, 0, 0, 0);
     
     return {
-      questionsToday: questions.filter(q => new Date(q.submitted_at) >= today).length,
+      questionsToday: questions.filter(q => new Date(q.created_at) >= today).length,
       repliedToday: questions.filter(q => q.replied_at && new Date(q.replied_at) >= today).length,
       newMasajids: masajids.filter(m => new Date(m.created_at) >= today).length,
       newUsers: users.filter(u => new Date(u.created_at) >= today).length,

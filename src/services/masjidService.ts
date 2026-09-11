@@ -15,6 +15,8 @@ export interface Masjid {
   is_active: boolean;
   ask_imam_enabled?: boolean;
   asr_fiqh?: 'hanafi' | 'shafai';
+  latitude?: number | string | null;
+  longitude?: number | string | null;
   home_users_count?: number;
   created_at: string;
   updated_at: string;
@@ -40,6 +42,8 @@ export interface CreateMasjidData {
   contact_phone?: string;
   ask_imam_enabled?: boolean;
   asr_fiqh?: 'hanafi' | 'shafai';
+  latitude?: number;
+  longitude?: number;
 }
 
 export interface UpdateMasjidData {
@@ -55,6 +59,8 @@ export interface UpdateMasjidData {
   contact_phone?: string;
   ask_imam_enabled?: boolean;
   asr_fiqh?: 'hanafi' | 'shafai';
+  latitude?: number;
+  longitude?: number;
 }
 
 export interface MasjidStatistics {

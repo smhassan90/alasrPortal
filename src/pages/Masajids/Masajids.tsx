@@ -51,6 +51,8 @@ const EMPTY_MASJID_FORM = {
   contact_phone: '',
   ask_imam_enabled: true,
   asr_fiqh: 'hanafi' as 'hanafi' | 'shafai',
+  latitude: '',
+  longitude: '',
 };
 
 export const Masajids: React.FC = () => {
@@ -188,6 +190,8 @@ export const Masajids: React.FC = () => {
       contact_phone: masjid.contact_phone || '',
       ask_imam_enabled: isAskImamEnabled(masjid.ask_imam_enabled),
       asr_fiqh: masjid.asr_fiqh === 'shafai' ? 'shafai' : 'hanafi',
+      latitude: masjid.latitude != null && masjid.latitude !== '' ? String(masjid.latitude) : '',
+      longitude: masjid.longitude != null && masjid.longitude !== '' ? String(masjid.longitude) : '',
     });
     setShowMasjidModal(true);
   };
@@ -203,13 +207,46 @@ export const Masajids: React.FC = () => {
         return;
       }
 
+      const latitudeRaw = masjidForm.latitude.trim();
+      const longitudeRaw = masjidForm.longitude.trim();
+      if ((latitudeRaw && !longitudeRaw) || (!latitudeRaw && longitudeRaw)) {
+        toast.error('Latitude and longitude must both be filled, or both left blank');
+        return;
+      }
+      const latitude = latitudeRaw ? Number(latitudeRaw) : undefined;
+      const longitude = longitudeRaw ? Number(longitudeRaw) : undefined;
+      if (
+        (latitude !== undefined && (!Number.isFinite(latitude) || latitude < -90 || latitude > 90)) ||
+        (longitude !== undefined && (!Number.isFinite(longitude) || longitude < -180 || longitude > 180))
+      ) {
+        toast.error('Enter a valid latitude (-90 to 90) and longitude (-180 to 180)');
+        return;
+      }
+
+      const payload = {
+        name: masjidForm.name,
+        location: masjidForm.location,
+        address: masjidForm.address,
+        area: masjidForm.area,
+        city: masjidForm.city,
+        state: masjidForm.state,
+        country: masjidForm.country,
+        postal_code: masjidForm.postal_code,
+        contact_email: masjidForm.contact_email,
+        contact_phone: masjidForm.contact_phone,
+        ask_imam_enabled: masjidForm.ask_imam_enabled,
+        asr_fiqh: masjidForm.asr_fiqh,
+        latitude,
+        longitude,
+      };
+
       setLoading(true);
       if (editingMasjid) {
-        const updated = await masjidService.updateMasjid(editingMasjid.id, masjidForm);
+        const updated = await masjidService.updateMasjid(editingMasjid.id, payload);
         dispatch(updateMasjidState(updated));
         toast.success('Masjid updated successfully');
       } else {
-        const created = await masjidService.createMasjid(masjidForm);
+        const created = await masjidService.createMasjid(payload);
         dispatch(addMasjid(created));
         toast.success('Masjid created successfully');
       }
@@ -756,6 +793,28 @@ export const Masajids: React.FC = () => {
             label="Postal Code"
             value={masjidForm.postal_code}
             onChange={(value) => setMasjidForm({ ...masjidForm, postal_code: value })}
+            fullWidth
+          />
+          <Input
+            label="Latitude"
+            type="number"
+            value={masjidForm.latitude}
+            onChange={(value) => setMasjidForm({ ...masjidForm, latitude: value })}
+            placeholder="e.g. 24.8607"
+            helperText="Exact masjid location (used for distance in the user app)"
+            min={-90}
+            max={90}
+            fullWidth
+          />
+          <Input
+            label="Longitude"
+            type="number"
+            value={masjidForm.longitude}
+            onChange={(value) => setMasjidForm({ ...masjidForm, longitude: value })}
+            placeholder="e.g. 67.0011"
+            helperText="Leave blank to geocode from the address on save"
+            min={-180}
+            max={180}
             fullWidth
           />
           <Input
