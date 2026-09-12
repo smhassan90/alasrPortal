@@ -93,6 +93,14 @@ class QuestionService {
     this.questionsCache = null;
   }
 
+  async replyToQuestion(id: string, reply: string): Promise<Question> {
+    const response = await api.put<{ data: any } | any>(`/questions/${id}/reply`, { reply });
+    const raw = (response.data as any).data || response.data;
+    const question = normalizeQuestion(raw);
+    this.questionsCache = null;
+    return question;
+  }
+
   async getMasjidQuestionStatistics(masjidId: string): Promise<QuestionStatistics> {
     const response = await api.get<{ data: QuestionStatistics } | QuestionStatistics>(
       `/questions/masjid/${masjidId}/statistics`
